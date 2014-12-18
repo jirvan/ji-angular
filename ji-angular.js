@@ -30,8 +30,8 @@
 
  */
 
-jiAngNamespace();
-function jiAngNamespace() {
+(function () {
+    //'use strict';
 
     angular.module('jiAng', [])
 
@@ -1013,4 +1013,4 @@ function jiAngNamespace() {
 
     }
 
-}
+})();
