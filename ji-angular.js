@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.67.js
+ ji-angular-1.0.68.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -37,6 +37,9 @@
 
         //========== jiAng service ==========//
         .factory('jiAng', ['$filter', '$modal', function ($filter, $modal) { return new JiAngService($filter, $modal); }])
+
+        //========== jiJob service ==========//
+        .factory('jiJob', function ($filter, $modal) { return new JobLogService($filter, $modal); })
 
         //========== ji-auto-focus ==========//
         .directive('jiAutoFocus', function ($timeout) {
@@ -1007,6 +1010,94 @@
                     }
                 }
                 return fields;
+            }
+
+        }
+
+    }
+    function JobLogService($modal) {
+
+        this.openDialogAndStartJob = openDialogAndStartJob;
+
+
+        function openDialogAndStartJob(dialogTitle, startUrl) {
+
+            // Open the dialog
+            $modal.open({
+                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
+                                      '<div class="modal-body">\n' +
+                                      '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
+                                      '</div>\n' +
+                                      '<div class="modal-footer" style="margin-top: -5px">\n' +
+                                      '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
+                                      '</div>',
+                            controller: DialogController,
+                            windowClass: 'ji-job-dialog',
+                            resolve: {
+                                dialogTitle: function () { return dialogTitle; },
+                                startUrl: function () { return startUrl; }
+                            },
+                            backdrop: false
+                        });
+
+
+        }
+
+        function DialogController($scope, $http, $modalInstance, $timeout, jiAng, dialogTitle, startUrl) {
+
+            $scope.dialogTitle = dialogTitle;
+            $scope.log = null;
+            $scope.ok = ok;
+            $scope.okButtonDisabled = true;
+            startJob();
+
+            function scrollBottom() {
+                $scope.logTextArea[0].scrollTop = $scope.logTextArea[0].scrollHeight;
+            }
+
+            function ok() {
+                $modalInstance.close();
+            }
+
+            function startJob() {
+                $http.post(startUrl)
+                    .then(function (response) {
+                              var job = response.data;
+                              $scope.log = job.log;
+                              $timeout(scrollBottom, 0);
+                              if (job.status === "inProgress") {
+                                  $timeout(function () {refreshLog('jobpool/getJobDetails', job.jobId)}, 1000);
+                              } else {
+                                  $scope.okButtonDisabled = false;
+                                  $timeout(function () {$scope.okButton[0].focus();}, 0);
+                              }
+
+                          },
+                          function (reponse) {
+                              $scope.okButtonDisabled = false;
+                              jiAng.showErrorDialog(reponse);
+                          });
+            }
+
+            function refreshLog(jobDetailsUrl, jobId) {
+                $http.post(jobDetailsUrl, jobId)
+                    .then(function (response) {
+                              var job = response.data;
+                              $scope.log = job.log;
+                              $timeout(scrollBottom, 0);
+                              if (job.status === "inProgress") {
+                                  $timeout(function () {refreshLog(jobDetailsUrl, job.jobId)}, 1000);
+                              } else {
+                                  $scope.okButtonDisabled = false;
+                                  $timeout(function () {$scope.okButton[0].focus();}, 0);
+                              }
+
+                          },
+                          function (reponse) {
+                              $scope.okButtonDisabled = false;
+                              jiAng.showErrorDialog(reponse);
+                          });
+
             }
 
         }
