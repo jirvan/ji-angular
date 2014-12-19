@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.68.js
+ ji-angular-1.0.69.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -39,7 +39,7 @@
         .factory('jiAng', ['$filter', '$modal', function ($filter, $modal) { return new JiAngService($filter, $modal); }])
 
         //========== jiJob service ==========//
-        .factory('jiJob', function ($filter, $modal) { return new JobLogService($filter, $modal); })
+        .factory('jiJob', function ($modal) { return new JobLogService($modal); })
 
         //========== ji-auto-focus ==========//
         .directive('jiAutoFocus', function ($timeout) {
@@ -1015,10 +1015,10 @@
         }
 
     }
+
     function JobLogService($modal) {
 
         this.openDialogAndStartJob = openDialogAndStartJob;
-
 
         function openDialogAndStartJob(dialogTitle, startUrl) {
 
