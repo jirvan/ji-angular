@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.69.js
+ ji-angular-1.0.70.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -308,7 +308,24 @@
                            }
                        };
 
-                   }]);
+                   }])
+
+        //========== jiLabelledObject filter ==========//
+        .filter('jiLabelledObject', [function () {
+                    return function (labelledObjects, searchPattern) {
+                        var returnArray = [];
+                        for (var i = 0; i < labelledObjects.length; i++) {
+                            if (searchPattern) {
+                                if (labelledObjects[i].label.toLowerCase().indexOf(searchPattern.toLowerCase()) !== -1) {
+                                    returnArray.push(labelledObjects[i]);
+                                }
+                            } else {
+                                returnArray.push(labelledObjects[i]);
+                            }
+                        }
+                        return returnArray;
+                    }
+                }]);
 
     function jiCurrencyDirective($filter, restrictToNonNegative) {
         return {
