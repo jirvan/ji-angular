@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.71.js
+ ji-angular-1.0.72.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -33,10 +33,10 @@
 (function () {
     //'use strict';
 
-    angular.module('jiAng', [])
+    angular.module('jiAngular', [])
 
-        //========== jiAng service ==========//
-        .factory('jiAng', ['$filter', '$modal', function ($filter, $modal) { return new JiAngService($filter, $modal); }])
+        //========== ji service ==========//
+        .factory('ji', ['$filter', '$modal', function ($filter, $modal) { return new JiService($filter, $modal); }])
 
         //========== jiJob service ==========//
         .factory('jiJob', function ($modal) { return new JobLogService($modal); })
@@ -883,7 +883,7 @@
         }
     }
 
-    function JiAngService($filter, $modal) {
+    function JiService($filter, $modal) {
 
         this.firstAncestorWithClass = firstAncestorWithClass;
         this.firstAncestorWithTagName = firstAncestorWithTagName;
@@ -1032,6 +1032,23 @@
 
         }
 
+        this.coalesce = function (item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11) {
+            if (item11 || item11 === 0) {
+                throw new Error('ji-angular coalesce(): A maximum of 10 items can be "coalesced"');
+            }
+            if (item1 || item1 === 0) return item1;
+            else if (item2 || item2 === 0) return item2;
+            else if (item3 || item3 === 0) return item3;
+            else if (item4 || item4 === 0) return item4;
+            else if (item5 || item5 === 0) return item5;
+            else if (item6 || item6 === 0) return item6;
+            else if (item7 || item7 === 0) return item7;
+            else if (item8 || item8 === 0) return item8;
+            else if (item9 || item9 === 0) return item9;
+            else if (item10 || item10 === 0) return item10;
+            else return null;
+        };
+
     }
 
     function JobLogService($modal) {
@@ -1061,7 +1078,7 @@
 
         }
 
-        function DialogController($scope, $http, $modalInstance, $timeout, jiAng, dialogTitle, startUrl) {
+        function DialogController($scope, $http, $modalInstance, $timeout, ji, dialogTitle, startUrl) {
 
             $scope.dialogTitle = dialogTitle;
             $scope.log = null;
@@ -1093,7 +1110,7 @@
                           },
                           function (reponse) {
                               $scope.okButtonDisabled = false;
-                              jiAng.showErrorDialog(reponse);
+                              ji.showErrorDialog(reponse);
                           });
             }
 
@@ -1113,7 +1130,7 @@
                           },
                           function (reponse) {
                               $scope.okButtonDisabled = false;
-                              jiAng.showErrorDialog(reponse);
+                              ji.showErrorDialog(reponse);
                           });
 
             }
