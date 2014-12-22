@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.70.js
+ ji-angular-1.0.71.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -993,6 +993,7 @@
 
             var searchRegExp = new RegExp("(" + searchText + ")", "i");
             var newItem = angular.copy(item);
+            newItem.originalItem = item;
             var fieldsToSearch = determineFieldsToSearch();
 
             // Highlight any search pattern occurrences
