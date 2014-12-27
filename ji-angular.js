@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.72.js
+ ji-angular-1.0.73.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -556,9 +556,9 @@
     function elementOffset($window, $document, element) {
         var boundingClientRect = element[0].getBoundingClientRect();
         return {
-            top: boundingClientRect.top + ($window.pageYOffset || $document[0].documentElement.scrollTop),
-            left: boundingClientRect.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft),
-            width: boundingClientRect.width || element.prop('offsetWidth'),
+            top:    boundingClientRect.top + ($window.pageYOffset || $document[0].documentElement.scrollTop),
+            left:   boundingClientRect.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft),
+            width:  boundingClientRect.width || element.prop('offsetWidth'),
             height: boundingClientRect.height || element.prop('offsetHeight')
         };
     }
@@ -1031,6 +1031,13 @@
             }
 
         }
+
+        this.isIn = function (item, items) {
+            for (var i = 0; i < items.length; i++) {
+                if (item === items[i]) return true;
+            }
+            return false;
+        };
 
         this.coalesce = function (item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11) {
             if (item11 || item11 === 0) {
