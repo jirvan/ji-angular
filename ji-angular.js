@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.73.js
+ ji-angular-1.0.74.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -64,6 +64,16 @@
                            restrict: 'A',
                            link: function (scope, element, attr) {
                                scope[attr.jiScopeElement] = element;
+                           }
+                       };
+                   })
+
+        //========== ji-parent-scope-element ==========//
+        .directive('jiParentScopeElement', function () {
+                       return {
+                           restrict: 'A',
+                           link: function (scope, element, attr) {
+                               scope.$parent[attr.jiParentScopeElement] = element;
                            }
                        };
                    })
