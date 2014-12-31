@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.74.js
+ ji-angular-1.0.75.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -954,21 +954,17 @@
             }
         };
 
-        this.showErrorDialog = function (reponse) {
+        this.showErrorDialog = function (response) {
             var dialogTitle, errorMessage;
-            if (reponse.data) {
-                if (reponse.data.errorName) {
-                    dialogTitle = reponse.data.errorName;
-                    errorMessage = reponse.data.errorMessage;
-                } else {
-                    dialogTitle = 'HTTP Error ';
-                    errorMessage = (reponse.statusText ? reponse.statusText : reponse.status);
-                    ;
-                }
+            if (response.data && response.data.errorName) {
+                dialogTitle = response.data.errorName;
+                errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
+            } else if (response.config && response.config.url) {
+                dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
+                errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
             } else {
-                dialogTitle = 'HTTP Error ';
-                errorMessage = (reponse.statusText ? reponse.statusText : reponse.status);
-                ;
+                dialogTitle = 'Error ';
+                errorMessage = JSON.stringify(response);
             }
             $modal.open({
                             template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
@@ -1125,9 +1121,9 @@
                               }
 
                           },
-                          function (reponse) {
+                          function (response) {
                               $scope.okButtonDisabled = false;
-                              ji.showErrorDialog(reponse);
+                              ji.showErrorDialog(response);
                           });
             }
 
@@ -1145,9 +1141,9 @@
                               }
 
                           },
-                          function (reponse) {
+                          function (response) {
                               $scope.okButtonDisabled = false;
-                              ji.showErrorDialog(reponse);
+                              ji.showErrorDialog(response);
                           });
 
             }
