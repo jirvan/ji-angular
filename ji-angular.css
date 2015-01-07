@@ -31,6 +31,17 @@ ji-angular-1.0.75.css
  */
 
 
+.ji-iris-expand {
+    -webkit-transition: all linear 0.5s;
+    transition: all linear 0.5s;
+    margin: 0;
+}
+
+.ji-iris-expand.ng-hide {
+    margin: 1000px;
+    opacity: 0;
+}
+
 .ji-panel.ng-hide-add.slide-left, .ji-panel.ng-hide-remove.slide-left, .ji-panel.ng-hide-add.slide-right, .ji-panel.ng-hide-remove.slide-right {
     -webkit-transition: all linear 0.5s;
     -moz-transition: all linear 0.5s;
