@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.75.js
+ ji-angular-1.0.76.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
