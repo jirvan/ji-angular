@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.77.js
+ ji-angular-1.0.78.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -956,15 +956,22 @@
 
         this.showErrorDialog = function (response) {
             var dialogTitle, errorMessage;
-            if (response.data && response.data.errorName) {
-                dialogTitle = response.data.errorName;
-                errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
-            } else if (response.config && response.config.url) {
-                dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
-                errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
+            if (response) {
+                if (response.ignore) {
+                    return;
+                } else if (response.data && response.data.errorName) {
+                    dialogTitle = response.data.errorName;
+                    errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
+                } else if (response.config && response.config.url) {
+                    dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
+                    errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
+                } else {
+                    dialogTitle = 'Error ';
+                    errorMessage = JSON.stringify(response);
+                }
             } else {
                 dialogTitle = 'Error ';
-                errorMessage = JSON.stringify(response);
+                errorMessage = '';
             }
             $modal.open({
                             template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
@@ -1068,11 +1075,11 @@
 
         this.openDialogAndStartJob = openDialogAndStartJob;
 
-        function openDialogAndStartJob(dialogTitle, startUrl) {
+        function openDialogAndStartJob(dialogTitle, startUrl, uploadInputFile) {
 
             // Open the dialog
             $modal.open({
-                            template: '<div class="modal-header"><h3 class="modal-title" ng-bind-html="dialogTitle"></h3></div>\n' +
+                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
                                       '<div class="modal-body">\n' +
                                       '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
                                       '</div>\n' +
@@ -1083,7 +1090,8 @@
                             windowClass: 'ji-job-dialog',
                             resolve: {
                                 dialogTitle: function () { return dialogTitle; },
-                                startUrl: function () { return startUrl; }
+                                startUrl: function () { return startUrl; },
+                                uploadInputFile: function () { return uploadInputFile; }
                             },
                             backdrop: false
                         });
@@ -1091,13 +1099,17 @@
 
         }
 
-        function DialogController($scope, $http, $modalInstance, $timeout, ji, dialogTitle, startUrl) {
+        function DialogController($scope, $http, $modalInstance, $timeout, ji, dialogTitle, startUrl, uploadInputFile) {
 
             $scope.dialogTitle = dialogTitle;
             $scope.log = null;
             $scope.ok = ok;
             $scope.okButtonDisabled = true;
-            startJob();
+            if (uploadInputFile) {
+                startUploadJob();
+            } else {
+                startJob();
+            }
 
             function scrollBottom() {
                 $scope.logTextArea[0].scrollTop = $scope.logTextArea[0].scrollHeight;
@@ -1105,6 +1117,35 @@
 
             function ok() {
                 $modalInstance.close();
+            }
+
+            function startUploadJob() {
+                var formData = new FormData();
+                formData.append("file", csvUploadInput.files[0]);
+                $http({
+                          method: 'POST',
+                          url: startUrl,
+                          headers: {'Content-Type': undefined},
+                          data: formData,
+                          transformRequest: function (data, headersGetterFunction) {
+                              return data;
+                          }
+                      })
+                    .then(function (response) {
+                              var job = response.data;
+                              $scope.log = job.log;
+                              $timeout(scrollBottom, 0);
+                              if (job.status === "inProgress") {
+                                  $timeout(function () {refreshLog('jobpool/getJobDetails', job.jobId)}, 1000);
+                              } else {
+                                  $scope.okButtonDisabled = false;
+                                  $timeout(function () {$scope.okButton[0].focus();}, 0);
+                              }
+                          },
+                          function (response) {
+                              $scope.okButtonDisabled = false;
+                              ji.showErrorDialog(response);
+                          });
             }
 
             function startJob() {
