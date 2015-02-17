@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.78.js
+ ji-angular-1.0.79.js
 
  Copyright (c) 2014 Jirvan Pty Ltd
  All rights reserved.
@@ -1078,7 +1078,7 @@
         function openDialogAndStartJob(dialogTitle, startUrl, uploadInputFile) {
 
             // Open the dialog
-            $modal.open({
+            return $modal.open({
                             template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
                                       '<div class="modal-body">\n' +
                                       '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
