@@ -1,8 +1,8 @@
 /*
 
- ji-angular-1.0.79.js
+ ji-angular-1.0.80.js
 
- Copyright (c) 2014 Jirvan Pty Ltd
+ Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
@@ -997,6 +997,37 @@
                             },
                             backdrop: false
                         });
+        };
+
+        this.showPickDateDialog = function (dialogTitle) {
+            var providedResultHandler;
+            $modal.open({
+                            template: "<div ng-if=\"dialogTitle\" class=\"modal-header\"><h4 class=\"modal-title\">{{dialogTitle}}</h4></div>\n<div class=\"modal-body\" style=\"text-align: center; padding: 15px\">\n    <div style=\"display:inline-block; text-align: right\">\n        <datepicker ng-model=\"selectedDate\" min-date=\"minDate\" show-weeks=\"false\" ng-change=\"dateSelected(selectedDate)\"></datepicker>\n        <button class=\"btn-sm btn-default\" style=\'margin-top: 10px; padding: 3px\' ng-click=\"cancel()\">Cancel</button>\n    </div>\n</div>",
+                            controller: function ($scope, $modalInstance, dialogTitle) {
+                                $scope.dialogTitle = dialogTitle;
+                                $scope.dateSelected = function (selectedDate) {
+                                    if (providedResultHandler) {
+                                        providedResultHandler(selectedDate);
+                                    }
+                                    $modalInstance.close();
+                                };
+                                $scope.cancel = function () {
+                                    $modalInstance.close();
+                                };
+                            },
+                            windowClass: dialogTitle && dialogTitle.length > 25
+                                ? 'ji-date-dialog-lg'
+                                : 'ji-date-dialog',
+                            resolve: {
+                                dialogTitle: function () { return dialogTitle; }
+                            },
+                            backdrop: false
+                        });
+            return {
+                then: function (resultHandler) {
+                    providedResultHandler = resultHandler;
+                }
+            }
         };
 
         this.ngGridTextSearchFilter = function (gridOptions, searchText, item) {

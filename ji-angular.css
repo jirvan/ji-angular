@@ -1,8 +1,8 @@
 /*
 
-ji-angular-1.0.79.css
+ji-angular-1.0.80.css
 
- Copyright (c) 2014 Jirvan Pty Ltd
+ Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
@@ -101,6 +101,13 @@ ji-angular-1.0.79.css
     color: #a94442;
 }
 
+/* ji-date-dialog */
+.ji-date-dialog .modal-dialog {
+    width: 270px;
+}
+.ji-date-dialog-lg .modal-dialog {
+    width: 600px;
+}
 
 /* ji-job-dialog */
 .ji-job-dialog .modal-dialog {
