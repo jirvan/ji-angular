@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.80.js
+ ji-angular-1.0.81.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -974,13 +974,7 @@
                 errorMessage = '';
             }
             $modal.open({
-                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
-                                      '<div class="modal-body">\n' +
-                                      '    {{errorMessage}}\n' +
-                                      '</div>\n' +
-                                      '<div class="modal-footer">\n' +
-                                      '    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n' +
-                                      '</div>',
+                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
                             controller: function ($scope, $modalInstance, dialogTitle) {
                                 $scope.dialogTitle = dialogTitle;
                                 $scope.errorMessage = errorMessage;
@@ -997,6 +991,40 @@
                             },
                             backdrop: false
                         });
+        };
+
+        this.showMessageDialog = function (messageOrOptions) {
+            var providedResultHandler;
+            if (messageOrOptions.message) {
+                options = messageOrOptions;
+            } else {
+                options = {message: messageOrOptions};
+            }
+            if (!options.buttons) {
+               options.buttons = [{class: 'btn-primary', title: 'Ok'}]
+            }
+            $modal.open({
+                            template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="options.message"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button.value ? button.value : button.title)" ng-bind-html="button.title"></button>\n</div>',
+                            controller: function ($scope, $modalInstance, options) {
+                                $scope.options = options;
+                                $scope.buttonClicked = function (value) {
+                                    $modalInstance.close();
+                                    if (providedResultHandler) {
+                                        providedResultHandler(value);
+                                    }
+                                };
+                            },
+                            windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
+                            resolve: {
+                                options: function () { return options; }
+                            },
+                            backdrop: false
+                        });
+            return {
+                then: function (resultHandler) {
+                    providedResultHandler = resultHandler;
+                }
+            }
         };
 
         this.showPickDateDialog = function (dialogTitle) {
@@ -1110,22 +1138,22 @@
 
             // Open the dialog
             return $modal.open({
-                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
-                                      '<div class="modal-body">\n' +
-                                      '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
-                                      '</div>\n' +
-                                      '<div class="modal-footer" style="margin-top: -5px">\n' +
-                                      '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
-                                      '</div>',
-                            controller: DialogController,
-                            windowClass: 'ji-job-dialog',
-                            resolve: {
-                                dialogTitle: function () { return dialogTitle; },
-                                startUrl: function () { return startUrl; },
-                                uploadInputFile: function () { return uploadInputFile; }
-                            },
-                            backdrop: false
-                        });
+                                   template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
+                                             '<div class="modal-body">\n' +
+                                             '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
+                                             '</div>\n' +
+                                             '<div class="modal-footer" style="margin-top: -5px">\n' +
+                                             '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
+                                             '</div>',
+                                   controller: DialogController,
+                                   windowClass: 'ji-job-dialog',
+                                   resolve: {
+                                       dialogTitle: function () { return dialogTitle; },
+                                       startUrl: function () { return startUrl; },
+                                       uploadInputFile: function () { return uploadInputFile; }
+                                   },
+                                   backdrop: false
+                               });
 
 
         }

@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.80.css
+ji-angular-1.0.81.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -29,7 +29,6 @@ ji-angular-1.0.80.css
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
  */
-
 
 .ji-iris-expand {
     -webkit-transition: all linear 0.5s;
@@ -91,20 +90,80 @@ ji-angular-1.0.80.css
 .ji-error-dialog .modal-dialog {
     width: 400px;
 }
+
 .ji-error-dialog-lg .modal-dialog {
     width: 600px;
 }
+
 .ji-error-dialog div.modal-content, .ji-error-dialog-lg div.modal-content {
     border-color: #a94442;
 }
+
 .ji-error-dialog div.modal-header, .ji-error-dialog-lg div.modal-header {
     color: #a94442;
+}
+
+/* ji-message-dialog */
+.ji-message-dialog-100px .modal-dialog {
+    width: 100px;
+}
+.ji-message-dialog-150px .modal-dialog {
+    width: 150px;
+}
+.ji-message-dialog-200px .modal-dialog {
+    width: 200px;
+}
+.ji-message-dialog-250px .modal-dialog {
+    width: 250px;
+}
+.ji-message-dialog-300px .modal-dialog {
+    width: 300px;
+}
+.ji-message-dialog-350px .modal-dialog {
+    width: 350px;
+}
+.ji-message-dialog-400px .modal-dialog {
+    width: 400px;
+}
+.ji-message-dialog-450px .modal-dialog {
+    width: 450px;
+}
+.ji-message-dialog-500px .modal-dialog {
+    width: 500px;
+}
+.ji-message-dialog-550px .modal-dialog {
+    width: 550px;
+}
+.ji-message-dialog-600px .modal-dialog {
+    width: 600px;
+}
+.ji-message-dialog-650px .modal-dialog {
+    width: 650px;
+}
+.ji-message-dialog-700px .modal-dialog {
+    width: 700px;
+}
+.ji-message-dialog-750px .modal-dialog {
+    width: 750px;
+}
+.ji-message-dialog-800px .modal-dialog {
+    width: 800px;
+}
+.ji-message-dialog-850px .modal-dialog {
+    width: 850px;
+}
+.ji-message-dialog-900px .modal-dialog {
+    width: 900px;
+}
+.ji-message-dialog-950px .modal-dialog {
+    width: 950px;
 }
 
 /* ji-date-dialog */
 .ji-date-dialog .modal-dialog {
     width: 270px;
 }
+
 .ji-date-dialog-lg .modal-dialog {
     width: 600px;
 }
@@ -113,6 +172,7 @@ ji-angular-1.0.80.css
 .ji-job-dialog .modal-dialog {
     width: 650px;
 }
+
 .ji-job-dialog div.modal-body {
     padding: 0;
 }
