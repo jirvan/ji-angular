@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.81.js
+ ji-angular-1.0.82.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -957,9 +957,10 @@
         this.showErrorDialog = function (response) {
             var dialogTitle, errorMessage;
             if (response) {
-                if (response.ignore) {
-                    return;
-                } else if (response.data && response.data.errorName) {
+                //if (response.ignore) {
+                //    return;
+                //} else
+                if (response.data && response.data.errorName) {
                     dialogTitle = response.data.errorName;
                     errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
                 } else if (response.config && response.config.url) {
@@ -1001,7 +1002,7 @@
                 options = {message: messageOrOptions};
             }
             if (!options.buttons) {
-               options.buttons = [{class: 'btn-primary', title: 'Ok'}]
+                options.buttons = [{class: 'btn-primary', title: 'Ok'}]
             }
             $modal.open({
                             template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="options.message"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button.value ? button.value : button.title)" ng-bind-html="button.title"></button>\n</div>',
@@ -1253,3 +1254,41 @@
     }
 
 })();
+
+// This is reluctantly added as a global because it needs to be accessed at the config stage
+// by angularjs where it would not be possible to make it available as a service etc
+JiConfig = {
+
+    errorPageToUnauthorizedResponseTransformFunction: function ($q) {
+        return function (promise) {
+            return promise.then(
+                function (response) {
+
+                    if (response.status === 200
+                        && response.data
+                        && typeof response.data === "string"
+                        && response.data.substr(0, 22) === '<!-- logonPageFlag -->') {
+
+                        // Alter response
+                        response.status = 401;
+                        response.statusText = 'Unauthorized';
+                        response.generatedByErrorPageToUnauthorizedResponseTransformFunction = true;
+                        response.data = "HTTP 401: Unauthorized" + (response.config && response.config.url ? ' for ' + response.config.url : '');
+
+                        return $q.reject(response);
+
+                    } else {
+                        return response;
+                    }
+
+
+                },
+                function (response) {
+                    return $q.reject(response);
+                });
+
+        }
+
+    }
+
+};
