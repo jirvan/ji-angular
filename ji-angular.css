@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.82.css
+ji-angular-1.0.83.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -172,9 +172,27 @@ ji-angular-1.0.82.css
 .ji-job-dialog .modal-dialog {
     width: 650px;
 }
-
 .ji-job-dialog div.modal-body {
     padding: 0;
+}
+
+/* ji-date-dialog */
+.ji-logon-dialog.panel-container, .ji-logon-dialog .ji-panel {
+    height: 250px;
+    width: 500px;
+}
+.ji-logon-dialog div.modal-body form {
+    margin-left:auto;
+    margin-right:auto;
+}
+.ji-logon-dialog .modal-dialog {
+    width: 500px;
+}
+.ji-logon-dialog .modal-footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 .ji-found-text {
