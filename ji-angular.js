@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.84.js
+ ji-angular-1.0.85.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1200,7 +1200,7 @@
                               $scope.log = job.log;
                               $timeout(scrollBottom, 0);
                               if (job.status === "inProgress") {
-                                  $timeout(function () {refreshLog('jobpool/getJobDetails', job.jobId)}, 1000);
+                                  $timeout(function () {refreshLog('/jobpool/getJobDetails', job.jobId)}, 1000);
                               } else {
                                   $scope.okButtonDisabled = false;
                                   $timeout(function () {$scope.okButton[0].focus();}, 0);
@@ -1219,7 +1219,7 @@
                               $scope.log = job.log;
                               $timeout(scrollBottom, 0);
                               if (job.status === "inProgress") {
-                                  $timeout(function () {refreshLog('jobpool/getJobDetails', job.jobId)}, 1000);
+                                  $timeout(function () {refreshLog('/jobpool/getJobDetails', job.jobId)}, 1000);
                               } else {
                                   $scope.okButtonDisabled = false;
                                   $timeout(function () {$scope.okButton[0].focus();}, 0);
