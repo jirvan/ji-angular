@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.83.js
+ ji-angular-1.0.84.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1374,7 +1374,7 @@
 // by angularjs where it would not be possible to make it available as a service etc
 JiConfig = {
 
-    errorPageToUnauthorizedResponseTransformFunction: function ($q) {
+    logonPageToUnauthorizedResponseTransformFunction: function ($q) {
         return function (promise) {
             return promise.then(
                 function (response) {
@@ -1387,7 +1387,7 @@ JiConfig = {
                         // Alter response
                         response.status = 401;
                         response.statusText = 'Unauthorized';
-                        response.generatedByErrorPageToUnauthorizedResponseTransformFunction = true;
+                        response.generatedByLogonPageToUnauthorizedResponseTransformFunction = true;
                         response.data = "HTTP 401: Unauthorized" + (response.config && response.config.url ? ' for ' + response.config.url : '');
 
                         return $q.reject(response);
