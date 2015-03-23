@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.85.js
+ ji-angular-1.0.86.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1097,17 +1097,25 @@
             }
 
             function determineFieldsToSearch() {
-                var fields = [],
-                    candidateColumns = gridOptions.$gridScope.columns;
-                for (var i = 0; i < candidateColumns.length; i++) {
-                    if (candidateColumns[i].colDef.textSearchable && candidateColumns[i].visible) {
-                        fields.push(candidateColumns[i].field)
+                var i, fields = [];
+                if (gridOptions.$gridScope) {  // ng-grid
+                    var candidateColumns = gridOptions.$gridScope.columns;
+                    for (i = 0; i < candidateColumns.length; i++) {
+                        if (candidateColumns[i].colDef.textSearchable && candidateColumns[i].visible) {
+                            fields.push(candidateColumns[i].field)
+                        }
+                    }
+                } else {                       // ui-grid
+                   for (i = 0; i < gridOptions.columnDefs.length; i++) {
+                        if (gridOptions.columnDefs[i].textSearchable && (gridOptions.columnDefs[i].visible == undefined || gridOptions.columnDefs[i].visible)) {
+                            fields.push(gridOptions.columnDefs[i].field)
+                        }
                     }
                 }
                 return fields;
             }
 
-        }
+        };
 
         this.isIn = function (item, items) {
             for (var i = 0; i < items.length; i++) {
