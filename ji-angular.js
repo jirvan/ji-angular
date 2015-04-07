@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.89.js
+ ji-angular-1.0.90.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1282,7 +1282,9 @@
                           "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
                           "\n" +
                           "                        <div class=\"col-xs-7\">\n" +
-                          "                            <input name=\"username\" ji-auto-focus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
+                          "                            <input ng-if=\"focusUsername\" name=\"username\" autofocus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
+                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                          "                            <input ng-if=\"!focusUsername\" name=\"username\"          placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
                           "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
                           "\n" +
                           "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
@@ -1294,7 +1296,9 @@
                           "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
                           "\n" +
                           "                        <div class=\"col-xs-7\">\n" +
-                          "                            <input name=\"password\" ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                          "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
                           "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
                           "\n" +
                           "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
@@ -1325,9 +1329,17 @@
 
     }
 
-    function LogonDialogController($scope, $modalInstance, $http, $localStorage, ji) {
+    function LogonDialogController($scope, $modalInstance, $http, ji) {
 
-        $scope.model = {username: $localStorage.lastLoggedInAs};
+        var lastLoggedInAs;
+        if (html5StorageSupported()) {
+            lastLoggedInAs = localStorage.getItem("jiangLastLoggedInAs");
+        } else {
+            lastLoggedInAs = null;
+        }
+        $scope.focusUsername = !lastLoggedInAs;
+
+        $scope.model = {username: lastLoggedInAs};
         $scope.ji = ji;
         $scope.logon = logon;
         $scope.cancel = cancel;
@@ -1349,7 +1361,6 @@
         }
 
         function logon() {
-            $localStorage.lastLoggedInAs = $scope.model.username;
             $http.post('/j_security_check',
                        'j_username=' + encodeURIComponent($scope.model.username) + '&j_password=' + encodeURIComponent($scope.model.password),
                 {
@@ -1357,6 +1368,9 @@
                 })
                 .then(function (response) {
                           $scope.logonFailed = false;
+                          if (html5StorageSupported()) {
+                              localStorage.setItem("jiangLastLoggedInAs", $scope.model.username);
+                          }
                           $modalInstance.close();
                       },
                       function (response) {
@@ -1369,6 +1383,14 @@
                           }
                       }
             );
+        }
+
+        function html5StorageSupported() {
+            try {
+                return 'localStorage' in window && window['localStorage'] !== null;
+            } catch (e) {
+                return false;
+            }
         }
 
         function cancel() {
