@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.88.js
+ ji-angular-1.0.89.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1349,6 +1349,7 @@
         }
 
         function logon() {
+            $localStorage.lastLoggedInAs = $scope.model.username;
             $http.post('/j_security_check',
                        'j_username=' + encodeURIComponent($scope.model.username) + '&j_password=' + encodeURIComponent($scope.model.password),
                 {
@@ -1356,7 +1357,6 @@
                 })
                 .then(function (response) {
                           $scope.logonFailed = false;
-                          $localStorage.lastLoggedInAs = $scope.model.username;
                           $modalInstance.close();
                       },
                       function (response) {
