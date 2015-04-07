@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.87.js
+ ji-angular-1.0.88.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -97,11 +97,11 @@
 
         //========== ji-currency ==========//
         .directive('jiCurrency', ['$filter', function ($filter) {
-                       return jiCurrencyDirective($filter, false);
-                   }])
+            return jiCurrencyDirective($filter, false);
+        }])
         .directive('jiNonNegativeCurrency', ['$filter', function ($filter) {
-                       return jiCurrencyDirective($filter, true);
-                   }])
+            return jiCurrencyDirective($filter, true);
+        }])
 
         //========== ji-card-number ==========//
         .directive('jiCardNumber', function () {
@@ -177,41 +177,41 @@
 
         //========== ji-form ==========//
         .directive('jiForm', ['$timeout', function ($timeout) {
-                       return {
-                           restrict: 'A',
-                           link: function (scope, element, attrs) {
-                               var formName = element[0].getAttribute("name");
-                               if (formName) {
-                                   var form = scope[formName];
-                                   for (fieldName in form) {
-                                       if (fieldName[0] != '$' && form[fieldName] && form[fieldName].$pristine) {
-                                           var field = form[fieldName];
-                                           var inputs = element.find("input");
-                                           for (var i = 0; i < inputs.length; i++) {
-                                               if (inputs[i].getAttribute("name") === fieldName) {
-                                                   field.element = inputs[i];
-                                                   inputs[i].onfocus = function (event) {
-                                                       var targetName = event.target.getAttribute("name");
-                                                       if (targetName && scope[formName] && scope[formName][targetName]) {
-                                                           $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = true")}, 0);
-                                                       }
-                                                   };
-                                                   inputs[i].onblur = function () {
-                                                       var targetName = event.target.getAttribute("name");
-                                                       if (targetName && scope[formName] && scope[formName][targetName]) {
-                                                           $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = false")}, 0);
-                                                       }
-                                                   };
-                                               }
-                                           }
-                                       }
-                                   }
-                               } else {
-                                   throw new Error("ji-form: Form element does not have a name")
-                               }
-                           }
-                       };
-                   }])
+            return {
+                restrict: 'A',
+                link: function (scope, element, attrs) {
+                    var formName = element[0].getAttribute("name");
+                    if (formName) {
+                        var form = scope[formName];
+                        for (fieldName in form) {
+                            if (fieldName[0] != '$' && form[fieldName] && form[fieldName].$pristine) {
+                                var field = form[fieldName];
+                                var inputs = element.find("input");
+                                for (var i = 0; i < inputs.length; i++) {
+                                    if (inputs[i].getAttribute("name") === fieldName) {
+                                        field.element = inputs[i];
+                                        inputs[i].onfocus = function (event) {
+                                            var targetName = event.target.getAttribute("name");
+                                            if (targetName && scope[formName] && scope[formName][targetName]) {
+                                                $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = true")}, 0);
+                                            }
+                                        };
+                                        inputs[i].onblur = function () {
+                                            var targetName = event.target.getAttribute("name");
+                                            if (targetName && scope[formName] && scope[formName][targetName]) {
+                                                $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = false")}, 0);
+                                            }
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        throw new Error("ji-form: Form element does not have a name")
+                    }
+                }
+            };
+        }])
 
         //========== ji-element ==========//
         .directive('jiElement', function ($timeout, $parse) {
@@ -244,102 +244,102 @@
         //========== ji-popup ==========//
         .directive('jiPopup', ['$window', '$document', '$timeout', function ($window, $document, $timeout) {
 
-                       return {
-                           restrict: 'EA',
-                           replace: 'false',
-                           templateUrl: function (iElement, iAttrs) {
-                               if (!iAttrs.templateUrl) throw new Error("ji-popup: template-url must be provided");
-                               return iAttrs.templateUrl;
-                           },
-                           link: function (scope, iElement, iAttrs) {
-                               linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiPopup', 'ji-popup', 'popup');
-                           }
-                       };
+            return {
+                restrict: 'EA',
+                replace: 'false',
+                templateUrl: function (iElement, iAttrs) {
+                    if (!iAttrs.templateUrl) throw new Error("ji-popup: template-url must be provided");
+                    return iAttrs.templateUrl;
+                },
+                link: function (scope, iElement, iAttrs) {
+                    linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiPopup', 'ji-popup', 'popup');
+                }
+            };
 
-                   }])
+        }])
 
 
         //========== ji-menu ==========//
         .directive('jiMenu', ['$window', '$document', '$timeout', function ($window, $document, $timeout) {
 
-                       return {
-                           restrict: 'EA',
-                           replace: 'false',
-                           templateUrl: function (iElement, iAttrs) {
-                               if (!iAttrs.templateUrl) throw new Error("ji-menu: template-url must be provided");
-                               return iAttrs.templateUrl;
-                           },
-                           link: function (scope, iElement, iAttrs) {
-                               iElement.addClass('dropdown-menu');
-                               iElement.css({
-                                                display: 'block',
-                                                visibility: 'hidden',
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                margin: 0
-                                            });
-                               var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiMenu', 'ji-menu', 'menu');
-                               iElement.on('click', popup.close);
-                           }
-                       };
+            return {
+                restrict: 'EA',
+                replace: 'false',
+                templateUrl: function (iElement, iAttrs) {
+                    if (!iAttrs.templateUrl) throw new Error("ji-menu: template-url must be provided");
+                    return iAttrs.templateUrl;
+                },
+                link: function (scope, iElement, iAttrs) {
+                    iElement.addClass('dropdown-menu');
+                    iElement.css({
+                        display: 'block',
+                        visibility: 'hidden',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        margin: 0
+                    });
+                    var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiMenu', 'ji-menu', 'menu');
+                    iElement.on('click', popup.close);
+                }
+            };
 
-                   }])
+        }])
 
 
         //========== ji-smart-input WORK IN PROGRESS ==========//
         .directive('jiSmartInput', ['$window', '$document', '$timeout', function ($window, $document, $timeout) {
 
-                       return {
-                           restrict: 'EA',
-                           replace: 'false',
-                           template: function (iElement, iAttrs) {
-                               return "<ul class='dropdown-menu' style='position:relative; overflow-y: auto; font-size: 16px; min-width: 50px; max-height: 400px'>\n" +
-                                      "    <li ng-repeat='item in filteredItems' ng-class='{\"ji-select-active\": $index === activeFilteredItemIndex}'\n" +
-                                      "        style='padding-right: 20px'\n" +
-                                      "        ng-click='selectActiveItem()'\n" +
-                                      "        ng-mouseover='competitorDropDownItemMouseOver($index)'>\n" +
-                                      "        <a>{{formatDisplayText(item)}}</a>\n" +
-                                      "    </li>\n" +
-                                      "</ul>";
-                           },
+            return {
+                restrict: 'EA',
+                replace: 'false',
+                template: function (iElement, iAttrs) {
+                    return "<ul class='dropdown-menu' style='position:relative; overflow-y: auto; font-size: 16px; min-width: 50px; max-height: 400px'>\n" +
+                           "    <li ng-repeat='item in filteredItems' ng-class='{\"ji-select-active\": $index === activeFilteredItemIndex}'\n" +
+                           "        style='padding-right: 20px'\n" +
+                           "        ng-click='selectActiveItem()'\n" +
+                           "        ng-mouseover='competitorDropDownItemMouseOver($index)'>\n" +
+                           "        <a>{{formatDisplayText(item)}}</a>\n" +
+                           "    </li>\n" +
+                           "</ul>";
+                },
 //                           templateUrl: function (iElement, iAttrs) {
 //                               if (!iAttrs.templateUrl) throw new Error("ji-smart-input: template-url must be provided");
 //                               return iAttrs.templateUrl;
 //                           },
-                           link: function (scope, iElement, iAttrs) {
-                               iElement.addClass('dropdown-menu');
-                               iElement.css({
-                                                display: 'block',
-                                                visibility: 'hidden',
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                margin: 0
-                                            });
-                               var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiSmartInput', 'ji-smart-input', 'input');
-                               iElement.on('click', popup.close);
-                           }
-                       };
+                link: function (scope, iElement, iAttrs) {
+                    iElement.addClass('dropdown-menu');
+                    iElement.css({
+                        display: 'block',
+                        visibility: 'hidden',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        margin: 0
+                    });
+                    var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiSmartInput', 'ji-smart-input', 'input');
+                    iElement.on('click', popup.close);
+                }
+            };
 
-                   }])
+        }])
 
         //========== jiLabelledObject filter ==========//
         .filter('jiLabelledObject', [function () {
-                    return function (labelledObjects, searchPattern) {
-                        var returnArray = [];
-                        for (var i = 0; i < labelledObjects.length; i++) {
-                            if (searchPattern) {
-                                if (labelledObjects[i].label.toLowerCase().indexOf(searchPattern.toLowerCase()) !== -1) {
-                                    returnArray.push(labelledObjects[i]);
-                                }
-                            } else {
-                                returnArray.push(labelledObjects[i]);
-                            }
+            return function (labelledObjects, searchPattern) {
+                var returnArray = [];
+                for (var i = 0; i < labelledObjects.length; i++) {
+                    if (searchPattern) {
+                        if (labelledObjects[i].label.toLowerCase().indexOf(searchPattern.toLowerCase()) !== -1) {
+                            returnArray.push(labelledObjects[i]);
                         }
-                        return returnArray;
+                    } else {
+                        returnArray.push(labelledObjects[i]);
                     }
-                }]);
+                }
+                return returnArray;
+            }
+        }]);
 
     function jiCurrencyDirective($filter, restrictToNonNegative) {
         return {
@@ -570,9 +570,9 @@
     function elementOffset($window, $document, element) {
         var boundingClientRect = element[0].getBoundingClientRect();
         return {
-            top:    boundingClientRect.top + ($window.pageYOffset || $document[0].documentElement.scrollTop),
-            left:   boundingClientRect.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft),
-            width:  boundingClientRect.width || element.prop('offsetWidth'),
+            top: boundingClientRect.top + ($window.pageYOffset || $document[0].documentElement.scrollTop),
+            left: boundingClientRect.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft),
+            width: boundingClientRect.width || element.prop('offsetWidth'),
             height: boundingClientRect.height || element.prop('offsetHeight')
         };
     }
@@ -979,23 +979,23 @@
                 errorMessage = '';
             }
             $modal.open({
-                            template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
-                            controller: function ($scope, $modalInstance, dialogTitle) {
-                                $scope.dialogTitle = dialogTitle;
-                                $scope.errorMessage = errorMessage;
-                                $scope.ok = function () {
-                                    $modalInstance.close();
-                                };
-                            },
-                            windowClass: !dialogTitle || dialogTitle.length > 25
-                                ? 'ji-error-dialog-lg'
-                                : 'ji-error-dialog',
-                            resolve: {
-                                dialogTitle: function () { return dialogTitle; },
-                                errorMessage: function () { return errorMessage; }
-                            },
-                            backdrop: false
-                        });
+                template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
+                controller: function ($scope, $modalInstance, dialogTitle) {
+                    $scope.dialogTitle = dialogTitle;
+                    $scope.errorMessage = errorMessage;
+                    $scope.ok = function () {
+                        $modalInstance.close();
+                    };
+                },
+                windowClass: !dialogTitle || dialogTitle.length > 25
+                    ? 'ji-error-dialog-lg'
+                    : 'ji-error-dialog',
+                resolve: {
+                    dialogTitle: function () { return dialogTitle; },
+                    errorMessage: function () { return errorMessage; }
+                },
+                backdrop: false
+            });
         };
 
         this.showMessageDialog = function (messageOrOptions) {
@@ -1009,22 +1009,22 @@
                 options.buttons = [{class: 'btn-primary', title: 'Ok'}]
             }
             $modal.open({
-                            template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="options.message"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button.value ? button.value : button.title)" ng-bind-html="button.title"></button>\n</div>',
-                            controller: function ($scope, $modalInstance, options) {
-                                $scope.options = options;
-                                $scope.buttonClicked = function (value) {
-                                    $modalInstance.close();
-                                    if (providedResultHandler) {
-                                        providedResultHandler(value);
-                                    }
-                                };
-                            },
-                            windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
-                            resolve: {
-                                options: function () { return options; }
-                            },
-                            backdrop: false
-                        });
+                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="options.message"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button.value ? button.value : button.title)" ng-bind-html="button.title"></button>\n</div>',
+                controller: function ($scope, $modalInstance, options) {
+                    $scope.options = options;
+                    $scope.buttonClicked = function (value) {
+                        $modalInstance.close();
+                        if (providedResultHandler) {
+                            providedResultHandler(value);
+                        }
+                    };
+                },
+                windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
+                resolve: {
+                    options: function () { return options; }
+                },
+                backdrop: false
+            });
             return {
                 then: function (resultHandler) {
                     providedResultHandler = resultHandler;
@@ -1035,27 +1035,27 @@
         this.showPickDateDialog = function (dialogTitle) {
             var providedResultHandler;
             $modal.open({
-                            template: "<div ng-if=\"dialogTitle\" class=\"modal-header\"><h4 class=\"modal-title\">{{dialogTitle}}</h4></div>\n<div class=\"modal-body\" style=\"text-align: center; padding: 15px\">\n    <div style=\"display:inline-block; text-align: right\">\n        <datepicker ng-model=\"selectedDate\" min-date=\"minDate\" show-weeks=\"false\" ng-change=\"dateSelected(selectedDate)\"></datepicker>\n        <button class=\"btn-sm btn-default\" style=\'margin-top: 10px; padding: 3px\' ng-click=\"cancel()\">Cancel</button>\n    </div>\n</div>",
-                            controller: function ($scope, $modalInstance, dialogTitle) {
-                                $scope.dialogTitle = dialogTitle;
-                                $scope.dateSelected = function (selectedDate) {
-                                    if (providedResultHandler) {
-                                        providedResultHandler(selectedDate);
-                                    }
-                                    $modalInstance.close();
-                                };
-                                $scope.cancel = function () {
-                                    $modalInstance.close();
-                                };
-                            },
-                            windowClass: dialogTitle && dialogTitle.length > 25
-                                ? 'ji-date-dialog-lg'
-                                : 'ji-date-dialog',
-                            resolve: {
-                                dialogTitle: function () { return dialogTitle; }
-                            },
-                            backdrop: false
-                        });
+                template: "<div ng-if=\"dialogTitle\" class=\"modal-header\"><h4 class=\"modal-title\">{{dialogTitle}}</h4></div>\n<div class=\"modal-body\" style=\"text-align: center; padding: 15px\">\n    <div style=\"display:inline-block; text-align: right\">\n        <datepicker ng-model=\"selectedDate\" min-date=\"minDate\" show-weeks=\"false\" ng-change=\"dateSelected(selectedDate)\"></datepicker>\n        <button class=\"btn-sm btn-default\" style=\'margin-top: 10px; padding: 3px\' ng-click=\"cancel()\">Cancel</button>\n    </div>\n</div>",
+                controller: function ($scope, $modalInstance, dialogTitle) {
+                    $scope.dialogTitle = dialogTitle;
+                    $scope.dateSelected = function (selectedDate) {
+                        if (providedResultHandler) {
+                            providedResultHandler(selectedDate);
+                        }
+                        $modalInstance.close();
+                    };
+                    $scope.cancel = function () {
+                        $modalInstance.close();
+                    };
+                },
+                windowClass: dialogTitle && dialogTitle.length > 25
+                    ? 'ji-date-dialog-lg'
+                    : 'ji-date-dialog',
+                resolve: {
+                    dialogTitle: function () { return dialogTitle; }
+                },
+                backdrop: false
+            });
             return {
                 then: function (resultHandler) {
                     providedResultHandler = resultHandler;
@@ -1106,7 +1106,7 @@
                         }
                     }
                 } else {                       // ui-grid
-                   for (i = 0; i < gridOptions.columnDefs.length; i++) {
+                    for (i = 0; i < gridOptions.columnDefs.length; i++) {
                         if (gridOptions.columnDefs[i].textSearchable && (gridOptions.columnDefs[i].visible == undefined || gridOptions.columnDefs[i].visible)) {
                             fields.push(gridOptions.columnDefs[i].field)
                         }
@@ -1151,22 +1151,22 @@
 
             // Open the dialog
             return $modal.open({
-                                   template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
-                                             '<div class="modal-body">\n' +
-                                             '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
-                                             '</div>\n' +
-                                             '<div class="modal-footer" style="margin-top: -5px">\n' +
-                                             '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
-                                             '</div>',
-                                   controller: DialogController,
-                                   windowClass: 'ji-job-dialog',
-                                   resolve: {
-                                       dialogTitle: function () { return dialogTitle; },
-                                       startUrl: function () { return startUrl; },
-                                       uploadInputFile: function () { return uploadInputFile; }
-                                   },
-                                   backdrop: false
-                               });
+                template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
+                          '<div class="modal-body">\n' +
+                          '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
+                          '</div>\n' +
+                          '<div class="modal-footer" style="margin-top: -5px">\n' +
+                          '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
+                          '</div>',
+                controller: DialogController,
+                windowClass: 'ji-job-dialog',
+                resolve: {
+                    dialogTitle: function () { return dialogTitle; },
+                    startUrl: function () { return startUrl; },
+                    uploadInputFile: function () { return uploadInputFile; }
+                },
+                backdrop: false
+            });
 
 
         }
@@ -1195,14 +1195,14 @@
                 var formData = new FormData();
                 formData.append("file", csvUploadInput.files[0]);
                 $http({
-                          method: 'POST',
-                          url: startUrl,
-                          headers: {'Content-Type': undefined},
-                          data: formData,
-                          transformRequest: function (data, headersGetterFunction) {
-                              return data;
-                          }
-                      })
+                    method: 'POST',
+                    url: startUrl,
+                    headers: {'Content-Type': undefined},
+                    data: formData,
+                    transformRequest: function (data, headersGetterFunction) {
+                        return data;
+                    }
+                })
                     .then(function (response) {
                               var job = response.data;
                               $scope.log = job.log;
@@ -1269,65 +1269,65 @@
 
         this.open = function (successHandler) {
             $modal.open({
-                            template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Logon</h3></div>\n" +
-                                      "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
-                                      "\n" +
-                                      "    <div>\n" +
-                                      "        <div>\n" +
-                                      "            <div class=\"modal-body\">\n" +
-                                      "                <br/>\n" +
-                                      "\n" +
-                                      "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
-                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
-                                      "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
-                                      "\n" +
-                                      "                        <div class=\"col-xs-7\">\n" +
-                                      "                            <input name=\"username\" ji-auto-focus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
-                                      "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
-                                      "\n" +
-                                      "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
-                                      "\n" +
-                                      "                        </div>\n" +
-                                      "                    </div>\n" +
-                                      "\n" +
-                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
-                                      "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
-                                      "\n" +
-                                      "                        <div class=\"col-xs-7\">\n" +
-                                      "                            <input name=\"password\" ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
-                                      "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
-                                      "\n" +
-                                      "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
-                                      "\n" +
-                                      "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
-                                      "\n" +
-                                      "                        </div>\n" +
-                                      "                    </div>\n" +
-                                      "\n" +
-                                      "                </form>\n" +
-                                      "\n" +
-                                      "            </div>\n" +
-                                      "            <div class=\"modal-footer\">\n" +
-                                      "                <div style=\"position:relative; width: 100%\">\n" +
-                                      "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
-                                      "                    <button class=\"btn btn-primary\" ng-click=\"ji.validateForm(mainForm) ? logon() : null\">Logon</button>\n" +
-                                      "                </div>\n" +
-                                      "            </div>\n" +
-                                      "        </div>\n" +
-                                      "    </div>\n" +
-                                      "\n" +
-                                      "</div>\n",
-                            controller: 'LogonDialogController',
-                            windowClass: 'ji-logon-dialog',
-                            backdrop: false
-                        }).result.then(successHandler);
+                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Logon</h3></div>\n" +
+                          "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
+                          "\n" +
+                          "    <div>\n" +
+                          "        <div>\n" +
+                          "            <div class=\"modal-body\">\n" +
+                          "                <br/>\n" +
+                          "\n" +
+                          "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
+                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
+                          "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
+                          "\n" +
+                          "                        <div class=\"col-xs-7\">\n" +
+                          "                            <input name=\"username\" ji-auto-focus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
+                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
+                          "\n" +
+                          "                        </div>\n" +
+                          "                    </div>\n" +
+                          "\n" +
+                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
+                          "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
+                          "\n" +
+                          "                        <div class=\"col-xs-7\">\n" +
+                          "                            <input name=\"password\" ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
+                          "\n" +
+                          "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
+                          "\n" +
+                          "                        </div>\n" +
+                          "                    </div>\n" +
+                          "\n" +
+                          "                </form>\n" +
+                          "\n" +
+                          "            </div>\n" +
+                          "            <div class=\"modal-footer\">\n" +
+                          "                <div style=\"position:relative; width: 100%\">\n" +
+                          "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
+                          "                    <button class=\"btn btn-primary\" ng-click=\"ji.validateForm(mainForm) ? logon() : null\">Logon</button>\n" +
+                          "                </div>\n" +
+                          "            </div>\n" +
+                          "        </div>\n" +
+                          "    </div>\n" +
+                          "\n" +
+                          "</div>\n",
+                controller: 'LogonDialogController',
+                windowClass: 'ji-logon-dialog',
+                backdrop: false
+            }).result.then(successHandler);
         }
 
     }
 
-    function LogonDialogController($scope, $modalInstance, $http, ji) {
+    function LogonDialogController($scope, $modalInstance, $http, $localStorage, ji) {
 
-        $scope.model = {};
+        $scope.model = {username: $localStorage.lastLoggedInAs};
         $scope.ji = ji;
         $scope.logon = logon;
         $scope.cancel = cancel;
@@ -1351,11 +1351,12 @@
         function logon() {
             $http.post('/j_security_check',
                        'j_username=' + encodeURIComponent($scope.model.username) + '&j_password=' + encodeURIComponent($scope.model.password),
-                       {
-                           headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
-                       })
+                {
+                    headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
+                })
                 .then(function (response) {
                           $scope.logonFailed = false;
+                          $localStorage.lastLoggedInAs = $scope.model.username;
                           $modalInstance.close();
                       },
                       function (response) {
