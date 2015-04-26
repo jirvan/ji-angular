@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.90.js
+ ji-angular-1.0.91.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1377,7 +1377,9 @@
                           if (response && response.status == 401) {
                               $scope.logonFailed = true;
                               $scope.model.password = null;
-                              $scope.passwordInput[0].focus();
+                              if ($scope.passwordInput) {
+                                  $scope.passwordInput[0].focus();
+                              }
                           } else {
                               ji.showErrorDialog(response);
                           }
