@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.91.js
+ ji-angular-1.0.92.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1374,7 +1374,8 @@
                           $modalInstance.close();
                       },
                       function (response) {
-                          if (response && response.status == 401) {
+                          if (response && (response.status == 401
+                                           || response.status == 404)) {  // 404 (not found) shouldn't happen but sometimes the server sends it and it seems best to ignore it and try again
                               $scope.logonFailed = true;
                               $scope.model.password = null;
                               if ($scope.passwordInput) {
