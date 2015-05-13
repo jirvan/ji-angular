@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.92.js
+ ji-angular-1.0.93.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1092,7 +1092,9 @@
 
             function findAndHighlightHits(fieldNames) {
                 for (var i = 0; i < fieldNames.length; i++) {
-                    newItem[fieldNames[i]] = newItem[fieldNames[i]].replace(searchRegExp, "<span class='ji-found-text'>$1</span>");
+                    if (newItem[fieldNames[i]]) {
+                        newItem[fieldNames[i]] = newItem[fieldNames[i]].replace(searchRegExp, "<span class='ji-found-text'>$1</span>");
+                    }
                 }
             }
 
