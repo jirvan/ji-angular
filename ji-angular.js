@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.94.js
+ ji-angular-1.0.95.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -188,12 +188,14 @@
                         form.touchAllInputs = touchAllInputs;
                         form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
                         form.validate = validate;
+                        form.inputs = [];
                         for (fieldName in form) {
                             if (fieldName[0] != '$' && form[fieldName] && form[fieldName].$pristine) {
                                 var field = form[fieldName];
                                 var inputs = element.find("input");
                                 for (var i = 0; i < inputs.length; i++) {
                                     if (inputs[i].getAttribute("name") === fieldName) {
+                                        form.inputs.push(field);
                                         field.element = inputs[i];
                                         inputs[i].onfocus = function (event) {
                                             var targetName = event.target.getAttribute("name");
@@ -226,9 +228,13 @@
                     }
 
                     function touchAllInputs() {
-                        form.element.find('input').addClass('ng-dirty');
-                        form.element.find('input').removeClass('ng-pristine');
-                        form.password.$pristine = false;
+                        for (var i = 0; i < form.inputs.length; i++) {
+                            form.inputs[i].$dirty = true;
+                            form.inputs[i].$pristine = false;
+                            angular.element(form.inputs[i].element).removeClass('ng-pristine');
+                            angular.element(form.inputs[i].element).addClass('ng-dirty');
+                        }
+                        form.$setDirty();
                     }
 
                     function validate() {
