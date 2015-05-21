@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.93.js
+ ji-angular-1.0.94.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -180,9 +180,14 @@
             return {
                 restrict: 'A',
                 link: function (scope, element, attrs) {
-                    var formName = element[0].getAttribute("name");
+
+                    var form, formName = element[0].getAttribute("name");
                     if (formName) {
-                        var form = scope[formName];
+                        form = scope[formName];
+                        form.element = element;
+                        form.touchAllInputs = touchAllInputs;
+                        form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
+                        form.validate = validate;
                         for (fieldName in form) {
                             if (fieldName[0] != '$' && form[fieldName] && form[fieldName].$pristine) {
                                 var field = form[fieldName];
@@ -209,6 +214,33 @@
                     } else {
                         throw new Error("ji-form: Form element does not have a name")
                     }
+
+                    function moveFocusToFirstInvalidInput() {
+                        var formInputs = form.element.find('input');
+                        for (var i = 0; i < formInputs.length; i++) {
+                            if (angular.element(formInputs[i]).hasClass('ng-invalid')) {
+                                formInputs[i].focus();
+                                break;
+                            }
+                        }
+                    }
+
+                    function touchAllInputs() {
+                        form.element.find('input').addClass('ng-dirty');
+                        form.element.find('input').removeClass('ng-pristine');
+                        form.password.$pristine = false;
+                    }
+
+                    function validate() {
+                        form.touchAllInputs();
+                        if (form.$valid) {
+                            return true;
+                        } else {
+                            form.moveFocusToFirstInvalidInput();
+                            return false;
+                        }
+                    }
+
                 }
             };
         }])
