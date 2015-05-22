@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.95.js
+ ji-angular-1.0.96.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -188,31 +188,37 @@
                         form.touchAllInputs = touchAllInputs;
                         form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
                         form.validate = validate;
-                        form.inputs = [];
-                        for (fieldName in form) {
-                            if (fieldName[0] != '$' && form[fieldName] && form[fieldName].$pristine) {
-                                var field = form[fieldName];
-                                var inputs = element.find("input");
-                                for (var i = 0; i < inputs.length; i++) {
-                                    if (inputs[i].getAttribute("name") === fieldName) {
-                                        form.inputs.push(field);
-                                        field.element = inputs[i];
-                                        inputs[i].onfocus = function (event) {
-                                            var targetName = event.target.getAttribute("name");
-                                            if (targetName && scope[formName] && scope[formName][targetName]) {
-                                                $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = true")}, 0);
-                                            }
-                                        };
-                                        inputs[i].onblur = function () {
-                                            var targetName = event.target.getAttribute("name");
-                                            if (targetName && scope[formName] && scope[formName][targetName]) {
-                                                $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = false")}, 0);
-                                            }
-                                        };
+                        form.resetInputs = resetInputs;
+                        resetInputs();
+
+                        function resetInputs() {
+                            form.inputs = [];
+                            for (fieldName in form) {
+                                if (fieldName[0] != '$' && form[fieldName] && (typeof form[fieldName].$pristine != 'undefined')) {
+                                    var field = form[fieldName];
+                                    var inputElements = element.find("input");
+                                    for (var i = 0; i < inputElements.length; i++) {
+                                        if (inputElements[i].getAttribute("name") === fieldName) {
+                                            form.inputs.push(field);
+                                            field.element = inputElements[i];
+                                            inputElements[i].onfocus = function (event) {
+                                                var targetName = event.target.getAttribute("name");
+                                                if (targetName && scope[formName] && scope[formName][targetName]) {
+                                                    $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = true")}, 0);
+                                                }
+                                            };
+                                            inputElements[i].onblur = function () {
+                                                var targetName = event.target.getAttribute("name");
+                                                if (targetName && scope[formName] && scope[formName][targetName]) {
+                                                    $timeout(function () {scope.$eval(formName + "." + targetName + ".$jiHasFocus = false")}, 0);
+                                                }
+                                            };
+                                        }
                                     }
                                 }
                             }
                         }
+
                     } else {
                         throw new Error("ji-form: Form element does not have a name")
                     }
@@ -237,7 +243,8 @@
                         form.$setDirty();
                     }
 
-                    function validate() {
+                    function validate(resetInputsBeforeValidating) {
+                        if (resetInputsBeforeValidating) form.resetInputs(); // Necessary sometime when an input is added (eg by ng-if) after the initial setting of the inputs
                         form.touchAllInputs();
                         if (form.$valid) {
                             return true;
