@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.98.js
+ ji-angular-1.0.99.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -942,6 +942,23 @@
         }
     }
 
+    function extractWindowLocationSearchParameters(windowLocationSearch) {
+        var pairs = windowLocationSearch.substring(1).split("&");
+        var obj = {};
+        var pair;
+        var i;
+
+        for (i in pairs) {
+            if (pairs[i] === "")
+                continue;
+
+            pair = pairs[i].split("=");
+            obj[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        }
+
+        return obj;
+    }
+
     function JiService($filter, $modal) {
 
         this.firstAncestorWithClass = firstAncestorWithClass;
@@ -1188,6 +1205,8 @@
             else return null;
         };
 
+        this.extractWindowLocationSearchParameters = extractWindowLocationSearchParameters;
+
     }
 
     function JobLogService($modal) {
@@ -1326,12 +1345,12 @@
                           "\n" +
                           "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
                           "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
+                          "                        <label class=\"col-sm-3 control-label\">Username</label>\n" +
                           "\n" +
-                          "                        <div class=\"col-xs-7\">\n" +
-                          "                            <input ng-if=\"focusUsername\" name=\"username\" autofocus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
+                          "                        <div class=\"col-sm-9\">\n" +
+                          "                            <input ng-if=\"focusUsername\" name=\"username\" autofocus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
                           "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
-                          "                            <input ng-if=\"!focusUsername\" name=\"username\"          placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 15em\"\n" +
+                          "                            <input ng-if=\"!focusUsername\" name=\"username\"          placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
                           "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
                           "\n" +
                           "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
@@ -1340,12 +1359,12 @@
                           "                    </div>\n" +
                           "\n" +
                           "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
+                          "                        <label class=\"col-sm-3 control-label\">Password</label>\n" +
                           "\n" +
-                          "                        <div class=\"col-xs-7\">\n" +
-                          "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                        <div class=\"col-sm-9\">\n" +
+                          "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
                           "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
-                          "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 15em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
                           "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
                           "\n" +
                           "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
@@ -1376,17 +1395,21 @@
 
     }
 
-    function LogonDialogController($scope, $modalInstance, $http, ji) {
+    function LogonDialogController($scope, $modalInstance, $http, $window, ji) {
 
-        var lastLoggedInAs;
-        if (html5StorageSupported()) {
-            lastLoggedInAs = localStorage.getItem("jiangLastLoggedInAs");
-        } else {
-            lastLoggedInAs = null;
+        // Determine the default username (if any)
+        var defaultUsername = extractWindowLocationSearchParameters($window.location.search).username;
+        if (!defaultUsername) {
+            if (html5StorageSupported()) {
+                defaultUsername = localStorage.getItem("jiangLastLoggedInAs");
+            } else {
+                defaultUsername = null;
+            }
         }
-        $scope.focusUsername = !lastLoggedInAs;
 
-        $scope.model = {username: lastLoggedInAs};
+        $scope.focusUsername = !defaultUsername;
+
+        $scope.model = {username: defaultUsername};
         $scope.ji = ji;
         $scope.logon = logon;
         $scope.cancel = cancel;
