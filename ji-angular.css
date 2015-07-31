@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.99.css
+ji-angular-1.0.100.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -227,7 +227,7 @@ ji-angular-1.0.99.css
     padding: 0;
 }
 
-/* ji-date-dialog */
+/* ji-logon-dialog */
 .ji-logon-dialog.panel-container, .ji-logon-dialog .ji-panel {
     height: 250px;
     width: 500px;
@@ -240,6 +240,25 @@ ji-angular-1.0.99.css
     width: 500px;
 }
 .ji-logon-dialog .modal-footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+/* ji-resetpassword-dialog */
+.ji-resetpassword-dialog.panel-container, .ji-resetpassword-dialog .ji-panel {
+    height: 300px;
+    width: 550px;
+}
+.ji-resetpassword-dialog div.modal-body form {
+    margin-left:auto;
+    margin-right:auto;
+}
+.ji-resetpassword-dialog .modal-dialog {
+    width: 550px;
+}
+.ji-resetpassword-dialog .modal-footer {
     position: absolute;
     right: 0;
     bottom: 0;

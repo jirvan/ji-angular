@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.99.js
+ ji-angular-1.0.100.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -44,6 +44,10 @@
         //========== logonDialog service etc ==========//
         .factory('jiLogonDialog', function ($modal) { return new LogonDialogService($modal); })
         .controller('LogonDialogController', LogonDialogController)
+
+        //========== ResetPasswordDialog service etc ==========//
+        .factory('jiResetPasswordDialog', function ($modal) { return new ResetPasswordDialogService($modal); })
+        .controller('ResetPasswordDialogController', ResetPasswordDialogController)
 
         //========== ji-auto-focus ==========//
         .directive('jiAutoFocus', function ($timeout) {
@@ -1034,7 +1038,7 @@
                     errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
                 } else {
                     dialogTitle = 'Error ';
-                    errorMessage = JSON.stringify(response);
+                    errorMessage = typeof response === 'string' ? response : JSON.stringify(response);
                 }
             } else {
                 dialogTitle = 'Error ';
@@ -1464,6 +1468,139 @@
             } catch (e) {
                 return false;
             }
+        }
+
+        function cancel() {
+            $modalInstance.dismiss('cancel');
+        }
+
+    }
+
+    function ResetPasswordDialogService($modal) {
+
+        this.open = function (username, successHandler) {
+            $modal.open({
+                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Reset Password</h3></div>\n" +
+                          "<div class=\"ji-resetpassword-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
+                          "\n" +
+                          "    <div>\n" +
+                          "        <div>\n" +
+                          "            <div class=\"modal-body\">\n" +
+                          "                <br/>\n" +
+                          "\n" +
+                          "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
+                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
+                          "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
+                          "\n" +
+                          "                        <div class=\"col-sm-8\">\n" +
+                          "                            <input name=\"username\" disabled placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
+                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
+                          "\n" +
+                          "                        </div>\n" +
+                          "                    </div>\n" +
+                          "\n" +
+                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
+                          "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
+                          "\n" +
+                          "                        <div class=\"col-sm-8\">\n" +
+                          "                            <input name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine\" class=\"help-block\">Password is required</p>\n" +
+                          "\n" +
+                          "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
+                          "\n" +
+                          "                        </div>\n" +
+                          "                    </div>\n" +
+                          "\n" +
+                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' : mainForm.confirmPassword.$invalid && !mainForm.confirmPassword.$pristine }\">\n" +
+                          "                        <label class=\"col-sm-4 control-label\">Confirm&nbsp;password</label>\n" +
+                          "\n" +
+                          "                        <div class=\"col-sm-8\">\n" +
+                          "                            <input name=\"confirmPassword\" ji-scope-element=\"confirmPasswordInput\" type=\"password\" placeholder=\"password again\" class=\"form-control\" ng-model=\"model.confirmPassword\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                          "                                   ng-keyup=\"confirmPasswordInputKeyUp(mainForm, $event)\">\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.required && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation of password is required</p>\n" +
+                          "\n" +
+                          "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.passwordMatch && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation password does not match password</p>\n" +
+                          "\n" +
+                          "                        </div>\n" +
+                          "                    </div>\n" +
+                          "\n" +
+                          "                </form>\n" +
+                          "\n" +
+                          "            </div>\n" +
+                          "            <div class=\"modal-footer\">\n" +
+                          "                <div style=\"position:relative; width: 100%\">\n" +
+                          "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
+                          "                    <button class=\"btn btn-primary\" ng-click=\"onOk(mainForm)\">Ok</button>\n" +
+                          "                </div>\n" +
+                          "            </div>\n" +
+                          "        </div>\n" +
+                          "    </div>\n" +
+                          "\n" +
+                          "</div>\n",
+                controller: 'ResetPasswordDialogController',
+                windowClass: 'ji-resetpassword-dialog',
+                resolve: {
+                    username: function () {
+                        return username;
+                    }
+                },
+                backdrop: false
+            }).result.then(successHandler);
+        }
+
+    }
+
+    function ResetPasswordDialogController($scope, $modalInstance, ji, username) {
+
+        $scope.model = {username: username};
+        $scope.ji = ji;
+        $scope.onOk = onOk;
+        $scope.cancel = cancel;
+        $scope.usernameInputKeyUp = usernameInputKeyUp;
+        $scope.passwordInputKeyUp = passwordInputKeyUp;
+        $scope.confirmPasswordInputKeyUp = confirmPasswordInputKeyUp;
+
+        function usernameInputKeyUp(event) {
+            $scope.logonFailed = false;
+            if (event.keyCode == 13) {
+                $scope.passwordInput[0].focus();
+            }
+        }
+
+        function passwordInputKeyUp(event) {
+            if (event.keyCode == 13 && $scope.model.password) {
+                $scope.confirmPasswordInput[0].focus();
+            }
+        }
+
+        function confirmPasswordInputKeyUp(mainForm, event) {
+            mainForm.confirmPassword.$setValidity('passwordMatch', true);
+            if (event.keyCode == 13) {
+                onOk(mainForm);
+            }
+        }
+
+        function onOk(mainForm) {
+
+            // "Touch" all the fields so error messages show on failed validation
+            mainForm.password.$setDirty();
+            mainForm.confirmPassword.$setDirty();
+
+            // Close modal and return password
+            if (ji.validateForm(mainForm)) {
+                if ($scope.model.password === $scope.model.confirmPassword) {
+                    $modalInstance.close($scope.model.password);
+                } else {
+                    mainForm.confirmPassword.$setValidity('passwordMatch', false);
+                    $scope.confirmPasswordInput[0].focus();
+                }
+            }
+
         }
 
         function cancel() {
