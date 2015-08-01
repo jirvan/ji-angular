@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.100.js
+ ji-angular-1.0.101.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -193,7 +193,7 @@
                         form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
                         form.validate = validate;
                         form.resetInputs = resetInputs;
-                        resetInputs();
+                        $timeout(resetInputs, 0);
 
                         function resetInputs() {
                             form.inputs = [];
@@ -1337,13 +1337,11 @@
 
     function LogonDialogService($modal) {
 
-        this.open = function (successHandler) {
+        this.open = function (successHandler, requestedPasswordResetHandler) {
             $modal.open({
-                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Logon</h3></div>\n" +
+                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">{{requestingPasswordReset ? 'Reset Password' : 'Logon'}}</h3></div>\n" +
                           "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
                           "\n" +
-                          "    <div>\n" +
-                          "        <div>\n" +
                           "            <div class=\"modal-body\">\n" +
                           "                <br/>\n" +
                           "\n" +
@@ -1362,14 +1360,14 @@
                           "                        </div>\n" +
                           "                    </div>\n" +
                           "\n" +
-                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
+                          "                    <div ng-if=\"!requestingPasswordReset\" class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
                           "                        <label class=\"col-sm-3 control-label\">Password</label>\n" +
                           "\n" +
                           "                        <div class=\"col-sm-9\">\n" +
                           "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                          "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
                           "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                          "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
                           "\n" +
                           "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
                           "\n" +
@@ -1381,25 +1379,33 @@
                           "                </form>\n" +
                           "\n" +
                           "            </div>\n" +
-                          "            <div class=\"modal-footer\">\n" +
-                          "                <div style=\"position:relative; width: 100%\">\n" +
-                          "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
-                          "                    <button class=\"btn btn-primary\" ng-click=\"ji.validateForm(mainForm) ? logon() : null\">Logon</button>\n" +
+                          "            <div style='position: absolute; right: 0; bottom: 0; left: 0'>\n" +
+                          "                <div ng-hide=\"requestingPasswordReset || !requestedPasswordResetHandler\" style=\"padding-left: 10px; margin-bottom: 6px\">\n" +
+                          "                    <a  ng-click=\"onForgotYourPasswordClick()\" style=\"cursor: pointer\">Forgot your Password?</a>\n" +
+                          "                </div>\n" +
+                          "                <div class=\"modal-footer\" style='position: relative'>\n" +
+                          "                    <div style=\"position:relative; width: 100%\">\n" +
+                          "                        <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
+                          "                        <button class=\"btn btn-primary\" ng-click=\"onOkButtonClick(mainForm)\">{{requestingPasswordReset ? 'Request reset' : 'Logon'}}</button>\n" +
+                          "                    </div>\n" +
                           "                </div>\n" +
                           "            </div>\n" +
-                          "        </div>\n" +
-                          "    </div>\n" +
                           "\n" +
                           "</div>\n",
                 controller: 'LogonDialogController',
                 windowClass: 'ji-logon-dialog',
+                resolve: {
+                    requestedPasswordResetHandler: function () {
+                        return requestedPasswordResetHandler;
+                    }
+                },
                 backdrop: false
             }).result.then(successHandler);
         }
 
     }
 
-    function LogonDialogController($scope, $modalInstance, $http, $window, ji) {
+    function LogonDialogController($scope, $modalInstance, $http, $window, ji, requestedPasswordResetHandler) {
 
         // Determine the default username (if any)
         var defaultUsername = extractWindowLocationSearchParameters($window.location.search).username;
@@ -1412,13 +1418,19 @@
         }
 
         $scope.focusUsername = !defaultUsername;
+        $scope.requestedPasswordResetHandler = requestedPasswordResetHandler;
 
         $scope.model = {username: defaultUsername};
         $scope.ji = ji;
-        $scope.logon = logon;
+        $scope.onOkButtonClick = onOkButtonClick;
         $scope.cancel = cancel;
+        $scope.onForgotYourPasswordClick = onForgotYourPasswordClick;
         $scope.usernameInputKeyUp = usernameInputKeyUp;
         $scope.passwordInputKeyUp = passwordInputKeyUp;
+
+        function onForgotYourPasswordClick(event) {
+            $scope.requestingPasswordReset = true;
+        }
 
         function usernameInputKeyUp(event) {
             $scope.logonFailed = false;
@@ -1427,11 +1439,30 @@
             }
         }
 
-        function passwordInputKeyUp(event) {
+        function passwordInputKeyUp(mainForm, event) {
             $scope.logonFailed = false;
             if (event.keyCode == 13) {
-                logon();
+                onOkButtonClick(mainForm);
             }
+        }
+
+        function onOkButtonClick(mainForm) {
+
+            // "Touch" all the fields so error messages show on failed validation
+            mainForm.username.$setDirty();
+            if (mainForm.password) mainForm.password.$setDirty();
+
+            if (ji.validateForm(mainForm)) {
+                if ($scope.requestingPasswordReset) {
+                    $scope.requestingPasswordReset = false;
+                    if (requestedPasswordResetHandler) {
+                        requestedPasswordResetHandler($scope.model.username);
+                    }
+                } else {
+                    logon();
+                }
+            }
+
         }
 
         function logon() {
