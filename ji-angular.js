@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.101.js
+ ji-angular-1.0.102.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1337,7 +1337,7 @@
 
     function LogonDialogService($modal) {
 
-        this.open = function (successHandler, requestedPasswordResetHandler) {
+        this.open = function (successHandler, requestedPasswordResetHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
             $modal.open({
                 template: "<div class=\"modal-header\"><h3 class=\"modal-title\">{{requestingPasswordReset ? 'Reset Password' : 'Logon'}}</h3></div>\n" +
                           "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
@@ -1397,6 +1397,15 @@
                 resolve: {
                     requestedPasswordResetHandler: function () {
                         return requestedPasswordResetHandler;
+                    },
+                    loginProcessingUrl: function () {
+                        return loginProcessingUrl;
+                    },
+                    usernameParameter: function () {
+                        return usernameParameter;
+                    },
+                    passwordParameter: function () {
+                        return passwordParameter;
                     }
                 },
                 backdrop: false
@@ -1405,7 +1414,7 @@
 
     }
 
-    function LogonDialogController($scope, $modalInstance, $http, $window, ji, requestedPasswordResetHandler) {
+    function LogonDialogController($scope, $modalInstance, $http, $window, ji, requestedPasswordResetHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
 
         // Determine the default username (if any)
         var defaultUsername = extractWindowLocationSearchParameters($window.location.search).username;
@@ -1466,8 +1475,8 @@
         }
 
         function logon() {
-            $http.post('/j_security_check',
-                       'j_username=' + encodeURIComponent($scope.model.username) + '&j_password=' + encodeURIComponent($scope.model.password),
+            $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'j_security_check'),
+                       (usernameParameter ? usernameParameter : 'j_username=') + encodeURIComponent($scope.model.username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent($scope.model.password),
                 {
                     headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
                 })
