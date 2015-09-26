@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.102.js
+ ji-angular-1.0.103.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1036,6 +1036,12 @@
                 } else if (response.config && response.config.url) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
                     errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
+                } else if (response.error && response.message) {
+                    dialogTitle = response.status ? 'HTTP ' + response.status + ' error: ' + response.error : 'Error';
+                    errorMessage = response.message;
+                } else if (response.message) {
+                    dialogTitle = response.status ? 'HTTP ' + response.status + ' error': 'Error';
+                    errorMessage = response.message;
                 } else {
                     dialogTitle = 'Error ';
                     errorMessage = typeof response === 'string' ? response : JSON.stringify(response);
@@ -1654,6 +1660,45 @@
 // This is reluctantly added as a global because it needs to be accessed at the config stage
 // by angularjs where it would not be possible to make it available as a service etc
 JiConfig = {
+
+    baseAppConfig: function ($provide, $httpProvider) {
+
+        // If $httpProvider.responseInterceptors exists then angular 1.2.x is being used
+        if ($httpProvider.responseInterceptors) {
+            $httpProvider.responseInterceptors.push(JiConfig.logonPageToUnauthorizedResponseTransformFunction);
+        } else {
+            $httpProvider.interceptors.push(JiConfig.logonPageToUnauthorizedResponseInterceptor);
+        }
+
+        // default exception handler just logs uncaught exceptions - this will show an alert also
+        $provide.decorator("$exceptionHandler", function ($delegate) {
+            return function (exception, cause) {
+                $delegate(exception, cause);
+                var errorMessage, causeMessage;
+                if (typeof exception === "string") {
+                    errorMessage = exception;
+                } else if (exception.message) {
+                    errorMessage = exception.message;
+                } else {
+                    errorMessage = angular.toJson(exception, "pretty");
+                }
+                if (cause) {
+                    alert('exception:\n' + errorMessage
+                          + '\n\ncause:\n' + (typeof cause === "string" ? cause : angular.toJson(cause, "pretty")));
+                } else {
+                    alert(errorMessage);
+                }
+            };
+        });
+
+
+        // This is commented out as it seems to conflict with the spring url
+        // Conditionally set the html5Mode to remove the # in the urls (if possible)
+//                if (window.history && window.history.pushState) {
+//                    $locationProvider.html5Mode(true);
+//                }
+
+    },
 
     // Deprecated - only present to support angular 1.2.
     // Use logonPageToUnauthorizedResponseInterceptor below for angular 1.3
