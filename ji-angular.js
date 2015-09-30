@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.103.js
+ ji-angular-1.0.104.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -261,6 +261,83 @@
                 }
             };
         }])
+
+        //========== ji-currency-input ==========//
+        .directive('jiCurrencyInput', function ($filter) {
+                       return {
+                           require: 'ngModel',
+                           scope: true,
+                           link: Link
+                       };
+
+                       function Link(scope, element, attrs, modelCtrl) {
+
+                           // Formatter
+                           modelCtrl.$formatters.push(function (inputValue) {
+                               if (inputValue) {
+                                   var formattedValue = $filter('currency')(
+                                       parseFloat(inputValue.toString().replace(/[^0-9_-]/g, ''))
+                                   );
+                                   element.val(formattedValue);
+                                   return formattedValue;
+                               } else {
+                                   return '';
+                               }
+
+                           });
+
+                           // Parser
+                           modelCtrl.$parsers.push(function (inputValue) {
+                               if (inputValue) {
+
+                                   var numericValue = parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')).toFixed(2);
+                                   var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
+                                   if (sanitizedValue === '' || sanitizedValue === '-') return '';
+                                   var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
+                                   var numericIntegerPart = Math.abs(parseInt(sanitizedValue));
+                                   var integerPart = '' + numericIntegerPart;
+                                   if (sanitizedValue.match(/\./)) {
+                                       var fractionalPart = sanitizedValue.replace(/.*\./, '');
+                                       var periodPresent = true;
+                                   } else {
+                                       fractionalPart = '';
+                                       periodPresent = false;
+                                   }
+
+                                   var formattedValue;
+                                   if (integerPart === inputValue) {
+                                       formattedValue = $filter('currency')(numericValue, "$", 0);
+                                   } else {
+
+
+                                       if (integerPart === '') {
+                                           if (fractionalPart === '') {
+                                               formattedValue = signPrefix + '$0.';
+                                           } else {
+                                               formattedValue = signPrefix + '$0.' + fractionalPart.substr(0, 2);
+                                           }
+                                       } else {
+                                           if (fractionalPart === '') {
+                                               formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + (periodPresent ? '.' : '');
+                                           } else {
+                                               formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + "." + fractionalPart.substr(0, 2);
+                                           }
+                                       }
+                                   }
+
+                                   element.val(formattedValue);
+                                   return Number(numericValue);
+
+                               } else if (inputValue === '0') {
+                                   return 0;
+                               } else {
+                                   return '';
+                               }
+
+                           });
+                       }
+
+                   })
 
         //========== ji-element ==========//
         .directive('jiElement', function ($timeout, $parse) {
