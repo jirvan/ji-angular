@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.105.js
+ ji-angular-1.0.106.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1210,12 +1210,15 @@
                 if (response.data && response.data.errorName) {
                     dialogTitle = response.data.errorName;
                     errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
-                } else if (response.config && response.config.url) {
-                    dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
-                    errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
                 } else if (response.error && response.message) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error: ' + response.error : 'Error';
                     errorMessage = response.message;
+                } else if (response.data && response.data.error && response.data.message) {
+                    dialogTitle = response.data.status ? 'HTTP ' + response.data.status + ' error: ' + response.data.error : 'Error';
+                    errorMessage = response.data.message;
+                } else if (response.config && response.config.url) {
+                    dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
+                    errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
                 } else if (response.message) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
                     errorMessage = response.message;
@@ -1248,7 +1251,6 @@
         };
 
         this.showMessageDialog = function (messageOrOptions) {
-            var providedResultHandler;
             if (messageOrOptions.message) {
                 options = messageOrOptions;
             } else {
@@ -1258,13 +1260,14 @@
                 options.buttons = [{class: 'btn-primary', title: 'Ok'}]
             }
             $modal.open({
-                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="options.message"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button.value ? button.value : button.title)" ng-bind-html="button.title"></button>\n</div>',
-                controller: function ($scope, $modalInstance, options) {
+                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="$sce.trustAsHtml(options.message)"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button)" ng-bind-html="button.title"></button>\n</div>',
+                controller: function ($scope, $sce, $modalInstance, options) {
+                    $scope.$sce = $sce;
                     $scope.options = options;
-                    $scope.buttonClicked = function (value) {
+                    $scope.buttonClicked = function (button) {
                         $modalInstance.close();
-                        if (providedResultHandler) {
-                            providedResultHandler(value);
+                        if (button.action) {
+                            button.action();
                         }
                     };
                 },
@@ -1274,11 +1277,6 @@
                 },
                 backdrop: false
             });
-            return {
-                then: function (resultHandler) {
-                    providedResultHandler = resultHandler;
-                }
-            }
         };
 
         this.showPickDateDialog = function (dialogTitle) {
