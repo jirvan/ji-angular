@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.106.js
+ ji-angular-1.0.107.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1656,8 +1656,8 @@
         }
 
         function logon() {
-            $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'j_security_check'),
-                       (usernameParameter ? usernameParameter : 'j_username=') + encodeURIComponent($scope.model.username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent($scope.model.password),
+            $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'authenticateUser'),
+                       (usernameParameter ? usernameParameter : 'username') + '=' + encodeURIComponent($scope.model.username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent($scope.model.password),
                 {
                     headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
                 })
