@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.107.js
+ ji-angular-1.0.108.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -48,6 +48,31 @@
         //========== ResetPasswordDialog service etc ==========//
         .factory('jiResetPasswordDialog', function ($modal) { return new ResetPasswordDialogService($modal); })
         .controller('ResetPasswordDialogController', ResetPasswordDialogController)
+
+        //========== jison-debug ==========//
+        .directive('jisonDebug', function ($filter) {
+                       return {
+                           restrict: 'A',
+                           link: function (scope, element, attrs) {
+
+                               if (attrs.jisonDebug) {
+
+                                   var objectToDisplay = nestedProperty(scope, attrs.jisonDebug);
+
+                                   element
+                                       .css('position', 'absolute')
+                                       .css('top', '0')
+                                       .css('right', '1000px')
+                                       .css('bottom', '0')
+                                       .css('left', '0');
+                                   element.after('<pre style="position: absolute; top: 0; right: 0; bottom: 0; width: 1000px">' +
+                                                 $filter('json')(objectToDisplay, 4) +
+                                                 '</pre>');
+
+                               }
+                           }
+                       }
+                   })
 
         //========== ji-auto-focus ==========//
         .directive('jiAutoFocus', function ($timeout) {
@@ -566,6 +591,15 @@
                 return returnArray;
             }
         }]);
+
+    function nestedProperty(object, keyString) {
+        var keys = keyString.split('.');
+        var returnObject = object;
+        for (var i = 0; i < keys.length; i++) {
+            returnObject = returnObject[keys[i]];
+        }
+        return returnObject;
+    }
 
     function jiCurrencyDirective($filter, restrictToNonNegative) {
         return {
@@ -1144,6 +1178,8 @@
 
         this.firstAncestorWithClass = firstAncestorWithClass;
         this.firstAncestorWithTagName = firstAncestorWithTagName;
+
+        this.nestedProperty = nestedProperty;
 
         this.slidePanelsFromLeft = function (panelAncestorClass) {
             if (!panelAncestorClass) throw new Error("panelAncestorClass must be provided");
