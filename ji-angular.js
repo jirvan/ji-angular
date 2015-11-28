@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.109.js
+ ji-angular-1.0.110.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -301,7 +301,7 @@
                            modelCtrl.$formatters.push(function (inputValue) {
                                if (inputValue) {
                                    var formattedValue = $filter('currency')(
-                                       parseFloat(inputValue.toString().replace(/[^0-9_-]/g, ''))
+                                       parseFloat(inputValue.toString().replace(/[^0-9-.]/g, ''))
                                    );
                                    element.val(formattedValue);
                                    return formattedValue;
