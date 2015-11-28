@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.110.js
+ ji-angular-1.0.111.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -315,7 +315,7 @@
                            modelCtrl.$parsers.push(function (inputValue) {
                                if (inputValue) {
 
-                                   var numericValue = parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')).toFixed(2);
+                                   var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), 2);
                                    var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
                                    if (sanitizedValue === '' || sanitizedValue === '-') return '';
                                    var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
@@ -379,7 +379,7 @@
                            // Formatter
                            modelCtrl.$formatters.push(function (inputValue) {
                                if (inputValue) {
-                                   var formattedValue = parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')).toFixed(decimalPlaces) + '%';
+                                   var formattedValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces) + '%';
                                    element.val(formattedValue);
                                    return formattedValue;
                                } else {
@@ -392,7 +392,7 @@
                            modelCtrl.$parsers.push(function (inputValue) {
                                if (inputValue) {
 
-                                   var numericValue = Number(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')).toFixed(decimalPlaces));
+                                   var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces);
                                    var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
                                    if (sanitizedValue === '' || sanitizedValue === '-') return '';
                                    var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
@@ -591,6 +591,16 @@
                 return returnArray;
             }
         }]);
+
+    function truncateDecimals(num, digits) {
+        var numS = num.toString(),
+            decPos = numS.indexOf('.'),
+            substrLength = decPos == -1 ? numS.length : 1 + decPos + digits,
+            trimmedResult = numS.substr(0, substrLength),
+            finalResult = isNaN(trimmedResult) ? 0 : trimmedResult;
+
+        return parseFloat(finalResult);
+    }
 
     function nestedProperty(object, keyString) {
         var keys = keyString.split('.');
