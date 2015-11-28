@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.108.js
+ ji-angular-1.0.109.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -57,7 +57,7 @@
 
                                if (attrs.jisonDebug) {
 
-                                   var objectToDisplay = nestedProperty(scope, attrs.jisonDebug);
+                                   //var objectToDisplay = nestedProperty(scope, attrs.jisonDebug);
 
                                    element
                                        .css('position', 'absolute')
@@ -66,7 +66,7 @@
                                        .css('bottom', '0')
                                        .css('left', '0');
                                    element.after('<pre style="position: absolute; top: 0; right: 0; bottom: 0; width: 1000px">' +
-                                                 $filter('json')(objectToDisplay, 4) +
+                                                 attrs.jisonDebug +
                                                  '</pre>');
 
                                }
@@ -379,7 +379,7 @@
                            // Formatter
                            modelCtrl.$formatters.push(function (inputValue) {
                                if (inputValue) {
-                                   var formattedValue = parseFloat(inputValue.toString().replace(/[^0-9_-]/g, '')).toFixed(decimalPlaces) + '%';
+                                   var formattedValue = parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')).toFixed(decimalPlaces) + '%';
                                    element.val(formattedValue);
                                    return formattedValue;
                                } else {
