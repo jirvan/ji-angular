@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.101.js
+ ji-angular-1.0.101.1.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -192,10 +192,7 @@
                         form.touchAllInputs = touchAllInputs;
                         form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
                         form.validate = validate;
-                        form.resetInputs = resetInputs;
-                        $timeout(resetInputs, 0);
-
-                        function resetInputs() {
+                        form.resetInputs =  function () {
                             form.inputs = [];
                             for (fieldName in form) {
                                 if (fieldName[0] != '$' && form[fieldName] && (typeof form[fieldName].$pristine != 'undefined')) {
@@ -221,7 +218,9 @@
                                     }
                                 }
                             }
-                        }
+                        };
+
+                        $timeout(form.resetInputs, 0);
 
                     } else {
                         throw new Error("ji-form: Form element does not have a name")
