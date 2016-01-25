@@ -229,7 +229,7 @@ ji-angular-1.0.113.css
 
 /* ji-logon-dialog */
 .ji-logon-dialog.panel-container, .ji-logon-dialog .ji-panel {
-    height: 250px;
+    /*height: 250px;*/
     width: 500px;
 }
 .ji-logon-dialog div.modal-body form {
