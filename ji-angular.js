@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.113.js
+ ji-angular-1.0.114.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -36,7 +36,7 @@
     angular.module('jiAngular', [])
 
         //========== ji service ==========//
-        .factory('ji', ['$filter', '$modal', function ($filter, $modal) { return new JiService($filter, $modal); }])
+        .factory('ji', ['$filter', '$modal', '$http', function ($filter, $modal, $http) { return new JiService($filter, $modal, $http); }])
 
         //========== jiJob service ==========//
         .factory('jiJob', function ($modal) { return new JobLogService($modal); })
@@ -217,7 +217,7 @@
                         form.touchAllInputs = touchAllInputs;
                         form.moveFocusToFirstInvalidInput = moveFocusToFirstInvalidInput;
                         form.validate = validate;
-                        form.resetInputs =  function () {
+                        form.resetInputs = function () {
                             form.inputs = [];
                             for (fieldName in form) {
                                 if (fieldName[0] != '$' && form[fieldName] && (typeof form[fieldName].$pristine != 'undefined')) {
@@ -590,6 +590,14 @@
                 return returnArray;
             }
         }]);
+
+    function html5StorageSupported() {
+        try {
+            return 'localStorage' in window && window['localStorage'] !== null;
+        } catch (e) {
+            return false;
+        }
+    }
 
     function truncateDecimals(num, digits) {
         var numS = num.toString(),
@@ -1183,12 +1191,30 @@
         return obj;
     }
 
-    function JiService($filter, $modal) {
+    function JiService($filter, $modal, $http) {
 
         this.firstAncestorWithClass = firstAncestorWithClass;
         this.firstAncestorWithTagName = firstAncestorWithTagName;
 
         this.nestedProperty = nestedProperty;
+
+        this.logon = function (username, password, successHandler, errorHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
+            $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'authenticateUser'),
+                       (usernameParameter ? usernameParameter : 'username') + '=' + encodeURIComponent(username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent(password),
+                {
+                    headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
+                })
+                .then(function (response) {
+                          if (html5StorageSupported()) {
+                              localStorage.setItem("jiangLastLoggedInAs", username);
+                          }
+                          if (successHandler) successHandler();
+                      },
+                      function (response) {
+                          if (errorHandler) errorHandler(response);
+                      }
+            );
+        };
 
         this.slidePanelsFromLeft = function (panelAncestorClass) {
             if (!panelAncestorClass) throw new Error("panelAncestorClass must be provided");
@@ -1726,14 +1752,6 @@
                           }
                       }
             );
-        }
-
-        function html5StorageSupported() {
-            try {
-                return 'localStorage' in window && window['localStorage'] !== null;
-            } catch (e) {
-                return false;
-            }
         }
 
         function cancel() {
