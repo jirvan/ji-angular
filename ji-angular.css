@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.114.css
+ji-angular-1.0.115.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -208,6 +208,10 @@ ji-angular-1.0.114.css
 }
 .ji-message-dialog-950px .modal-dialog {
     width: 950px;
+}
+.ji-message-dialog-90percent .modal-dialog {
+    width: 90%;
+    height: 90%;
 }
 
 /* ji-date-dialog */

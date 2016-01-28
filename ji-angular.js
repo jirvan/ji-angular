@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.114.js
+ ji-angular-1.0.115.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1193,6 +1193,8 @@
 
     function JiService($filter, $modal, $http) {
 
+        var thisService = this;
+
         this.firstAncestorWithClass = firstAncestorWithClass;
         this.firstAncestorWithTagName = firstAncestorWithTagName;
 
@@ -1273,7 +1275,7 @@
         };
 
         this.showErrorDialog = function (response) {
-            var dialogTitle, errorMessage;
+            var dialogTitle, errorMessage, errorInfo;
             if (response) {
                 //if (response.ignore) {
                 //    return;
@@ -1297,17 +1299,31 @@
                     dialogTitle = 'Error ';
                     errorMessage = typeof response === 'string' ? response : JSON.stringify(response);
                 }
+                if (response.errorInfo) {
+                    errorInfo = response.errorInfo;
+                } else if (response.data && response.data.errorInfo) {
+                    errorInfo = response.data.errorInfo;
+                }
             } else {
                 dialogTitle = 'Error ';
                 errorMessage = '';
             }
             $modal.open({
-                template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
+                template: '<div class="modal-header" ng-click="onClick($event)"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body" ng-click="onClick($event)">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
                 controller: function ($scope, $modalInstance, dialogTitle) {
                     $scope.dialogTitle = dialogTitle;
                     $scope.errorMessage = errorMessage;
+                    $scope.errorInfo = errorInfo;
                     $scope.ok = function () {
                         $modalInstance.close();
+                    };
+                    $scope.onClick = function (event) {
+                        if ($scope.errorInfo && event && event.shiftKey) {
+                            thisService.showMessageDialog({
+                                message: '<pre>' + errorInfo + '</pre>',
+                                dialogWidth: '90percent'
+                            });
+                        }
                     };
                 },
                 windowClass: !dialogTitle || dialogTitle.length > 25
@@ -1315,7 +1331,8 @@
                     : 'ji-error-dialog',
                 resolve: {
                     dialogTitle: function () { return dialogTitle; },
-                    errorMessage: function () { return errorMessage; }
+                    errorMessage: function () { return errorMessage; },
+                    errorInfo: function () { return errorInfo; }
                 },
                 backdrop: false
             });
