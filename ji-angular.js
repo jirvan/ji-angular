@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.115.js
+ ji-angular-1.0.116.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1348,7 +1348,7 @@
                 options.buttons = [{class: 'btn-primary', title: 'Ok'}]
             }
             $modal.open({
-                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="options.title"></h3></div>\n<div class="modal-body" ng-bind-html="$sce.trustAsHtml(options.message)"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button)" ng-bind-html="button.title"></button>\n</div>',
+                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="$sce.trustAsHtml(options.title)"></h3></div>\n<div class="modal-body" ng-bind-html="$sce.trustAsHtml(options.message)"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button)" ng-bind-html="$sce.trustAsHtml(button.title)"></button>\n</div>',
                 controller: function ($scope, $sce, $modalInstance, options) {
                     $scope.$sce = $sce;
                     $scope.options = options;
