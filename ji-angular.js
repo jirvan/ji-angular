@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.116.js
+ ji-angular-1.0.117.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1914,15 +1914,21 @@
 
 // This is reluctantly added as a global because it needs to be accessed at the config stage
 // by angularjs where it would not be possible to make it available as a service etc
-JiConfig = {
+JiGlobal = {
+
+    // Debugging utility (to provide a place to trigger debugger inspection of an expression in an angular
+    // template where errors are normally "swallowed" silently.
+    pipe: function(parameter) {
+        return parameter;
+    },
 
     baseAppConfig: function ($provide, $httpProvider) {
 
         // If $httpProvider.responseInterceptors exists then angular 1.2.x is being used
         if ($httpProvider.responseInterceptors) {
-            $httpProvider.responseInterceptors.push(JiConfig.logonPageToUnauthorizedResponseTransformFunction);
+            $httpProvider.responseInterceptors.push(JiGlobal.logonPageToUnauthorizedResponseTransformFunction);
         } else {
-            $httpProvider.interceptors.push(JiConfig.logonPageToUnauthorizedResponseInterceptor);
+            $httpProvider.interceptors.push(JiGlobal.logonPageToUnauthorizedResponseInterceptor);
         }
 
         // default exception handler just logs uncaught exceptions - this will show an alert also
