@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.117.js
+ ji-angular-1.0.118.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1418,7 +1418,7 @@
 
             function anythingFound(fieldNames) {
                 for (var i = 0; i < fieldNames.length; i++) {
-                    if (item[fieldNames[i]] !== newItem[fieldNames[i]]) {
+                    if (item[fieldNames[i]] + '' !== newItem[fieldNames[i]] + '') {
                         return true;
                     }
                 }
@@ -1428,7 +1428,7 @@
             function findAndHighlightHits(fieldNames) {
                 for (var i = 0; i < fieldNames.length; i++) {
                     if (newItem[fieldNames[i]]) {
-                        newItem[fieldNames[i]] = newItem[fieldNames[i]].replace(searchRegExp, "<span class='ji-found-text'>$1</span>");
+                        newItem[fieldNames[i]] = (newItem[fieldNames[i]] + '').replace(searchRegExp, "<span class='ji-found-text'>$1</span>");
                     }
                 }
             }
