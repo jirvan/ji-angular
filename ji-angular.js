@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.120.js
+ ji-angular-1.0.121.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1429,7 +1429,7 @@
                 var searchRegExp = new RegExp("(" + searchText + ")", "i");
 
                 for (var i = 0; i < fieldNames.length; i++) {
-                    if (item[fieldNames[i]] + '' && (item[fieldNames[i]] + '').match(searchRegExp)) {
+                    if (item[fieldNames[i]] != null && (item[fieldNames[i]] + '').match(searchRegExp)) {
                         return true;
                     }
                 }
@@ -1441,8 +1441,12 @@
         };
 
         this.highlightFoundText = function (text, searchText) {
-            var searchRegExp = new RegExp("(" + searchText + ")", "i");
-            return $sce.trustAsHtml((text + '').replace(searchRegExp, "<span class='ji-found-text'>$1</span>"));
+            if (text == null || searchText == null) {
+                return text;
+            } else {
+                var searchRegExp = new RegExp("(" + searchText + ")", "i");
+                return $sce.trustAsHtml((text + '').replace(searchRegExp, "<span class='ji-found-text'>$1</span>"));
+            }
         };
 
         this.isIn = function (item, items) {
