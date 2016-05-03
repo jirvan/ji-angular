@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.118.js
+ ji-angular-1.0.119.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -36,7 +36,7 @@
     angular.module('jiAngular', [])
 
         //========== ji service ==========//
-        .factory('ji', ['$filter', '$modal', '$http', function ($filter, $modal, $http) { return new JiService($filter, $modal, $http); }])
+        .factory('ji', ['$filter', '$modal', '$http', '$sce', function ($filter, $modal, $http, $sce) { return new JiService($filter, $modal, $http, $sce); }])
 
         //========== jiJob service ==========//
         .factory('jiJob', function ($modal) { return new JobLogService($modal); })
@@ -51,78 +51,78 @@
 
         //========== jison-debug ==========//
         .directive('jisonDebug', function ($filter) {
-                       return {
-                           restrict: 'A',
-                           link: function (scope, element, attrs) {
+            return {
+                restrict: 'A',
+                link: function (scope, element, attrs) {
 
-                               if (attrs.jisonDebug) {
+                    if (attrs.jisonDebug) {
 
-                                   //var objectToDisplay = nestedProperty(scope, attrs.jisonDebug);
+                        //var objectToDisplay = nestedProperty(scope, attrs.jisonDebug);
 
-                                   element
-                                       .css('position', 'absolute')
-                                       .css('top', '0')
-                                       .css('right', '1000px')
-                                       .css('bottom', '0')
-                                       .css('left', '0');
-                                   element.after('<pre style="position: absolute; top: 0; right: 0; bottom: 0; width: 1000px">' +
-                                                 attrs.jisonDebug +
-                                                 '</pre>');
+                        element
+                            .css('position', 'absolute')
+                            .css('top', '0')
+                            .css('right', '1000px')
+                            .css('bottom', '0')
+                            .css('left', '0');
+                        element.after('<pre style="position: absolute; top: 0; right: 0; bottom: 0; width: 1000px">' +
+                                      attrs.jisonDebug +
+                                      '</pre>');
 
-                               }
-                           }
-                       }
-                   })
+                    }
+                }
+            }
+        })
 
         //========== ji-auto-focus ==========//
         .directive('jiAutoFocus', function ($timeout) {
-                       return {
-                           restrict: 'AC',
-                           link: function (scope, element) {
+            return {
+                restrict: 'AC',
+                link: function (scope, element) {
 
-                               // Set the standard attribute to disable the $modal hijacking of autofocus
-                               element.attr("autofocus", true);
+                    // Set the standard attribute to disable the $modal hijacking of autofocus
+                    element.attr("autofocus", true);
 
-                               $timeout(function () {
-                                   element[0].focus();
-                               }, 0);
+                    $timeout(function () {
+                        element[0].focus();
+                    }, 0);
 
-                           }
-                       };
-                   })
+                }
+            };
+        })
 
         //========== ji-scope-element ==========//
         .directive('jiScopeElement', function () {
-                       return {
-                           restrict: 'A',
-                           link: function (scope, element, attr) {
-                               scope[attr.jiScopeElement] = element;
-                           }
-                       };
-                   })
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    scope[attr.jiScopeElement] = element;
+                }
+            };
+        })
 
         //========== ji-parent-scope-element ==========//
         .directive('jiParentScopeElement', function () {
-                       return {
-                           restrict: 'A',
-                           link: function (scope, element, attr) {
-                               scope.$parent[attr.jiParentScopeElement] = element;
-                           }
-                       };
-                   })
+            return {
+                restrict: 'A',
+                link: function (scope, element, attr) {
+                    scope.$parent[attr.jiParentScopeElement] = element;
+                }
+            };
+        })
 
         //========== ji-change ==========//
         .directive('jiChange', function () {
-                       return {
-                           restrict: 'A',
-                           require: 'ngModel',
-                           link: function (scope, element, attr, ctrl) {
-                               ctrl.$viewChangeListeners.push(function () {
-                                   scope[attr.jiChange](scope, element, attr, ctrl);
-                               });
-                           }
-                       };
-                   })
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, element, attr, ctrl) {
+                    ctrl.$viewChangeListeners.push(function () {
+                        scope[attr.jiChange](scope, element, attr, ctrl);
+                    });
+                }
+            };
+        })
 
         //========== ji-currency ==========//
         .directive('jiCurrency', ['$filter', function ($filter) {
@@ -134,75 +134,75 @@
 
         //========== ji-card-number ==========//
         .directive('jiCardNumber', function () {
-                       return {
-                           restrict: 'A',
-                           require: 'ngModel',
-                           link: function (scope, element, attr, input) {
-                               input.isCardNumberField = true;
-                               input.$viewChangeListeners.push(function () {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, element, attr, input) {
+                    input.isCardNumberField = true;
+                    input.$viewChangeListeners.push(function () {
 
-                                   // Apply in the same way ng-change does
-                                   var expectedCardType = getObjectPathValue(scope, input.$jiCardTypeScopeName);
-                                   scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateCardNumberField(input, expectedCardType) + "'");
+                        // Apply in the same way ng-change does
+                        var expectedCardType = getObjectPathValue(scope, input.$jiCardTypeScopeName);
+                        scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateCardNumberField(input, expectedCardType) + "'");
 
-                                   // Set the cardType in the model if appropriate
-                                   if (attr.ngModel.match(/[^.]\.[^.]/)) {
-                                       var modelParentPath = attr.ngModel.replace(/\.[^.]+$/, '');
-                                       scope.$eval(modelParentPath + ".cardType = " + (input.cardType ? "'" + input.cardType + "'" : input.cardType));
-                                       scope.$eval(modelParentPath + ".cardTypeTitle = " + (input.cardTypeTitle ? "'" + input.cardTypeTitle + "'" : input.cardTypeTitle));
-                                   }
+                        // Set the cardType in the model if appropriate
+                        if (attr.ngModel.match(/[^.]\.[^.]/)) {
+                            var modelParentPath = attr.ngModel.replace(/\.[^.]+$/, '');
+                            scope.$eval(modelParentPath + ".cardType = " + (input.cardType ? "'" + input.cardType + "'" : input.cardType));
+                            scope.$eval(modelParentPath + ".cardTypeTitle = " + (input.cardTypeTitle ? "'" + input.cardTypeTitle + "'" : input.cardTypeTitle));
+                        }
 
-                               });
-                           }
-                       };
-                   })
+                    });
+                }
+            };
+        })
 
         //========== ji-card-expiry ==========//
         .directive('jiCardExpiry', function () {
-                       return {
-                           restrict: 'A',
-                           require: 'ngModel',
-                           link: function (scope, element, attr, input) {
-                               input.isCardExpiryField = true;
-                               input.$viewChangeListeners.push(function () {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, element, attr, input) {
+                    input.isCardExpiryField = true;
+                    input.$viewChangeListeners.push(function () {
 
-                                   // Apply in the same way ng-change does
-                                   scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateCardExpiryField(input) + "'");
+                        // Apply in the same way ng-change does
+                        scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateCardExpiryField(input) + "'");
 
-                               });
-                           }
-                       };
-                   })
+                    });
+                }
+            };
+        })
 
         //========== ji-card-type ==========//
         .directive('jiCardType', function () {
-                       return {
-                           restrict: 'A',
-                           require: 'ngModel',
-                           link: function (scope, element, attr, ngModelController) {
-                               if (ngModelController) {
-                                   ngModelController.$jiCardTypeScopeName = attr.jiCardType;
-                               }
-                           }
-                       };
-                   })
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, element, attr, ngModelController) {
+                    if (ngModelController) {
+                        ngModelController.$jiCardTypeScopeName = attr.jiCardType;
+                    }
+                }
+            };
+        })
 
         //========== ji-bsb-number ==========//
         .directive('jiBsbNumber', function () {
-                       return {
-                           restrict: 'A',
-                           require: 'ngModel',
-                           link: function (scope, element, attr, input) {
-                               input.isBsbNumberField = true;
-                               input.$viewChangeListeners.push(function () {
+            return {
+                restrict: 'A',
+                require: 'ngModel',
+                link: function (scope, element, attr, input) {
+                    input.isBsbNumberField = true;
+                    input.$viewChangeListeners.push(function () {
 
-                                   // Apply in the same way ng-change does
-                                   scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateBsbNumberField(input) + "'");
+                        // Apply in the same way ng-change does
+                        scope.$eval(attr.ngModel + " = '" + formatAndPartiallyValidateBsbNumberField(input) + "'");
 
-                               });
-                           }
-                       };
-                   })
+                    });
+                }
+            };
+        })
 
         //========== ji-form ==========//
         .directive('jiForm', ['$timeout', function ($timeout) {
@@ -288,207 +288,207 @@
 
         //========== ji-currency-input ==========//
         .directive('jiCurrencyInput', function ($filter) {
-                       return {
-                           require: 'ngModel',
-                           scope: true,
-                           link: Link
-                       };
+            return {
+                require: 'ngModel',
+                scope: true,
+                link: Link
+            };
 
-                       function Link(scope, element, attrs, modelCtrl) {
+            function Link(scope, element, attrs, modelCtrl) {
 
-                           // Formatter
-                           modelCtrl.$formatters.push(function (inputValue) {
-                               if (inputValue) {
-                                   var formattedValue = $filter('currency')(
-                                       parseFloat(inputValue.toString().replace(/[^0-9-.]/g, ''))
-                                   );
-                                   element.val(formattedValue);
-                                   return formattedValue;
-                               } else {
-                                   return '';
-                               }
+                // Formatter
+                modelCtrl.$formatters.push(function (inputValue) {
+                    if (inputValue) {
+                        var formattedValue = $filter('currency')(
+                            parseFloat(inputValue.toString().replace(/[^0-9-.]/g, ''))
+                        );
+                        element.val(formattedValue);
+                        return formattedValue;
+                    } else {
+                        return '';
+                    }
 
-                           });
+                });
 
-                           // Parser
-                           modelCtrl.$parsers.push(function (inputValue) {
-                               if (inputValue) {
+                // Parser
+                modelCtrl.$parsers.push(function (inputValue) {
+                    if (inputValue) {
 
-                                   var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), 2);
-                                   var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
-                                   if (sanitizedValue === '' || sanitizedValue === '-') return '';
-                                   var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
-                                   var numericIntegerPart = Math.abs(parseInt(sanitizedValue));
-                                   var integerPart = '' + numericIntegerPart;
-                                   if (sanitizedValue.match(/\./)) {
-                                       var fractionalPart = sanitizedValue.replace(/.*\./, '');
-                                       var periodPresent = true;
-                                   } else {
-                                       fractionalPart = '';
-                                       periodPresent = false;
-                                   }
+                        var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), 2);
+                        var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
+                        if (sanitizedValue === '' || sanitizedValue === '-') return '';
+                        var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
+                        var numericIntegerPart = Math.abs(parseInt(sanitizedValue));
+                        var integerPart = '' + numericIntegerPart;
+                        if (sanitizedValue.match(/\./)) {
+                            var fractionalPart = sanitizedValue.replace(/.*\./, '');
+                            var periodPresent = true;
+                        } else {
+                            fractionalPart = '';
+                            periodPresent = false;
+                        }
 
-                                   var formattedValue;
-                                   if (integerPart === inputValue) {
-                                       formattedValue = $filter('currency')(numericValue, "$", 0);
-                                   } else {
+                        var formattedValue;
+                        if (integerPart === inputValue) {
+                            formattedValue = $filter('currency')(numericValue, "$", 0);
+                        } else {
 
 
-                                       if (integerPart === '') {
-                                           if (fractionalPart === '') {
-                                               formattedValue = signPrefix + '$0.';
-                                           } else {
-                                               formattedValue = signPrefix + '$0.' + fractionalPart.substr(0, 2);
-                                           }
-                                       } else {
-                                           if (fractionalPart === '') {
-                                               formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + (periodPresent ? '.' : '');
-                                           } else {
-                                               formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + "." + fractionalPart.substr(0, 2);
-                                           }
-                                       }
-                                   }
+                            if (integerPart === '') {
+                                if (fractionalPart === '') {
+                                    formattedValue = signPrefix + '$0.';
+                                } else {
+                                    formattedValue = signPrefix + '$0.' + fractionalPart.substr(0, 2);
+                                }
+                            } else {
+                                if (fractionalPart === '') {
+                                    formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + (periodPresent ? '.' : '');
+                                } else {
+                                    formattedValue = signPrefix + $filter('currency')(numericIntegerPart, "$", 0) + "." + fractionalPart.substr(0, 2);
+                                }
+                            }
+                        }
 
-                                   element.val(formattedValue);
-                                   return Number(numericValue);
+                        element.val(formattedValue);
+                        return Number(numericValue);
 
-                               } else if (inputValue === '0') {
-                                   return 0;
-                               } else {
-                                   return '';
-                               }
+                    } else if (inputValue === '0') {
+                        return 0;
+                    } else {
+                        return '';
+                    }
 
-                           });
-                       }
+                });
+            }
 
-                   })
+        })
 
         //========== ji-percentage-input ==========//
         .directive('jiPercentageInput', function () {
-                       return {
-                           require: 'ngModel',
-                           scope: true,
-                           link: Link
-                       };
+            return {
+                require: 'ngModel',
+                scope: true,
+                link: Link
+            };
 
-                       function Link(scope, element, attrs, modelCtrl) {
+            function Link(scope, element, attrs, modelCtrl) {
 
-                           var decimalPlaces = attrs['decimalPlaces'] ? Number(attrs['decimalPlaces']) : 0;
+                var decimalPlaces = attrs['decimalPlaces'] ? Number(attrs['decimalPlaces']) : 0;
 
-                           // Formatter
-                           modelCtrl.$formatters.push(function (inputValue) {
-                               if (inputValue) {
-                                   var formattedValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces) + '%';
-                                   element.val(formattedValue);
-                                   return formattedValue;
-                               } else {
-                                   return '';
-                               }
+                // Formatter
+                modelCtrl.$formatters.push(function (inputValue) {
+                    if (inputValue) {
+                        var formattedValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces) + '%';
+                        element.val(formattedValue);
+                        return formattedValue;
+                    } else {
+                        return '';
+                    }
 
-                           });
+                });
 
-                           // Parser
-                           modelCtrl.$parsers.push(function (inputValue) {
-                               if (inputValue) {
+                // Parser
+                modelCtrl.$parsers.push(function (inputValue) {
+                    if (inputValue) {
 
-                                   var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces);
-                                   var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
-                                   if (sanitizedValue === '' || sanitizedValue === '-') return '';
-                                   var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
-                                   var numericIntegerPart = Math.abs(parseInt(sanitizedValue));
-                                   var integerPart = '' + numericIntegerPart;
-                                   if (decimalPlaces == 0) {
-                                       fractionalPart = '';
-                                       periodPresent = false;
-                                   } else if (sanitizedValue.match(/\./)) {
-                                       var fractionalPart = sanitizedValue.replace(/.*\./, '');
-                                       var periodPresent = true;
-                                   } else {
-                                       fractionalPart = '';
-                                       periodPresent = false;
-                                   }
+                        var numericValue = truncateDecimals(parseFloat(inputValue.toString().replace(/[^0-9-.]/g, '')), decimalPlaces);
+                        var sanitizedValue = inputValue.replace(/[^0-9-.]/g, '');
+                        if (sanitizedValue === '' || sanitizedValue === '-') return '';
+                        var signPrefix = sanitizedValue.charAt(0) === '-' ? '-' : '';
+                        var numericIntegerPart = Math.abs(parseInt(sanitizedValue));
+                        var integerPart = '' + numericIntegerPart;
+                        if (decimalPlaces == 0) {
+                            fractionalPart = '';
+                            periodPresent = false;
+                        } else if (sanitizedValue.match(/\./)) {
+                            var fractionalPart = sanitizedValue.replace(/.*\./, '');
+                            var periodPresent = true;
+                        } else {
+                            fractionalPart = '';
+                            periodPresent = false;
+                        }
 
-                                   var formattedValue;
-                                   if (integerPart === inputValue) {
-                                       formattedValue = numericValue + '%';
-                                   } else {
+                        var formattedValue;
+                        if (integerPart === inputValue) {
+                            formattedValue = numericValue + '%';
+                        } else {
 
 
-                                       if (integerPart === '') {
-                                           if (fractionalPart === '') {
-                                               formattedValue = signPrefix + '0.' + '%';
-                                           } else {
-                                               formattedValue = signPrefix + '0.' + '%' + fractionalPart.substr(0, decimalPlaces);
-                                           }
-                                       } else {
-                                           if (fractionalPart === '') {
-                                               formattedValue = signPrefix + numericIntegerPart + (periodPresent ? '.' : '') + '%';
-                                           } else {
-                                               formattedValue = signPrefix + numericIntegerPart + "." + fractionalPart.substr(0, decimalPlaces) + '%';
-                                           }
-                                       }
-                                   }
+                            if (integerPart === '') {
+                                if (fractionalPart === '') {
+                                    formattedValue = signPrefix + '0.' + '%';
+                                } else {
+                                    formattedValue = signPrefix + '0.' + '%' + fractionalPart.substr(0, decimalPlaces);
+                                }
+                            } else {
+                                if (fractionalPart === '') {
+                                    formattedValue = signPrefix + numericIntegerPart + (periodPresent ? '.' : '') + '%';
+                                } else {
+                                    formattedValue = signPrefix + numericIntegerPart + "." + fractionalPart.substr(0, decimalPlaces) + '%';
+                                }
+                            }
+                        }
 
-                                   element.val(formattedValue);
-                                   setCaretPosition(element[0], formattedValue.length - 1);
-                                   return Number(numericValue);
+                        element.val(formattedValue);
+                        setCaretPosition(element[0], formattedValue.length - 1);
+                        return Number(numericValue);
 
-                               } else if (inputValue === '0') {
-                                   return 0;
-                               } else {
-                                   return '';
-                               }
+                    } else if (inputValue === '0') {
+                        return 0;
+                    } else {
+                        return '';
+                    }
 
-                           });
-                       }
+                });
+            }
 
-                       function setCaretPosition(elem, caretPos) {
+            function setCaretPosition(elem, caretPos) {
 
-                           if (elem != null) {
-                               if (elem.createTextRange) {
-                                   var range = elem.createTextRange();
-                                   range.move('character', caretPos);
-                                   range.select();
-                               }
-                               else {
-                                   if (elem.selectionStart) {
-                                       elem.focus();
-                                       elem.setSelectionRange(caretPos, caretPos);
-                                   }
-                                   else
-                                       elem.focus();
-                               }
-                           }
-                       }
+                if (elem != null) {
+                    if (elem.createTextRange) {
+                        var range = elem.createTextRange();
+                        range.move('character', caretPos);
+                        range.select();
+                    }
+                    else {
+                        if (elem.selectionStart) {
+                            elem.focus();
+                            elem.setSelectionRange(caretPos, caretPos);
+                        }
+                        else
+                            elem.focus();
+                    }
+                }
+            }
 
-                   })
+        })
 
         //========== ji-element ==========//
         .directive('jiElement', function ($timeout, $parse) {
-                       return {
-                           link: function (scope, element, attrs) {
-                               var elementName = element[0].getAttribute("name");
-                               if (elementName) {
-                                   scope.$parent[elementName + "Element"] = element;
-                               } else {
-                                   throw new Error("ji-element: Element does not have a name")
-                               }
-                           }
-                       };
-                   })
+            return {
+                link: function (scope, element, attrs) {
+                    var elementName = element[0].getAttribute("name");
+                    if (elementName) {
+                        scope.$parent[elementName + "Element"] = element;
+                    } else {
+                        throw new Error("ji-element: Element does not have a name")
+                    }
+                }
+            };
+        })
 
 
         //========== ji-replace ==========//
         .directive('jiReplace', function () {
-                       return {
-                           replace: true,
-                           restrict: 'A',
-                           templateUrl: function (iElement, iAttrs) {
-                               if (!iAttrs.jiReplace) throw new Error("ji-replace: template url must be provided");
-                               return iAttrs.jiReplace;
-                           }
-                       };
-                   })
+            return {
+                replace: true,
+                restrict: 'A',
+                templateUrl: function (iElement, iAttrs) {
+                    if (!iAttrs.jiReplace) throw new Error("ji-replace: template url must be provided");
+                    return iAttrs.jiReplace;
+                }
+            };
+        })
 
 
         //========== ji-popup ==========//
@@ -522,13 +522,13 @@
                 link: function (scope, iElement, iAttrs) {
                     iElement.addClass('dropdown-menu');
                     iElement.css({
-                        display: 'block',
-                        visibility: 'hidden',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        margin: 0
-                    });
+                                     display: 'block',
+                                     visibility: 'hidden',
+                                     position: 'absolute',
+                                     top: 0,
+                                     left: 0,
+                                     margin: 0
+                                 });
                     var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiMenu', 'ji-menu', 'menu');
                     iElement.on('click', popup.close);
                 }
@@ -560,13 +560,13 @@
                 link: function (scope, iElement, iAttrs) {
                     iElement.addClass('dropdown-menu');
                     iElement.css({
-                        display: 'block',
-                        visibility: 'hidden',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        margin: 0
-                    });
+                                     display: 'block',
+                                     visibility: 'hidden',
+                                     position: 'absolute',
+                                     top: 0,
+                                     left: 0,
+                                     margin: 0
+                                 });
                     var popup = linkPopupDirective($window, $document, $timeout, scope, iElement, iAttrs, 'jiSmartInput', 'ji-smart-input', 'input');
                     iElement.on('click', popup.close);
                 }
@@ -1191,7 +1191,7 @@
         return obj;
     }
 
-    function JiService($filter, $modal, $http) {
+    function JiService($filter, $modal, $http, $sce) {
 
         var thisService = this;
 
@@ -1203,9 +1203,9 @@
         this.logon = function (username, password, successHandler, errorHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
             $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'authenticateUser'),
                        (usernameParameter ? usernameParameter : 'username') + '=' + encodeURIComponent(username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent(password),
-                {
-                    headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
-                })
+                       {
+                           headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
+                       })
                 .then(function (response) {
                           if (html5StorageSupported()) {
                               localStorage.setItem("jiangLastLoggedInAs", username);
@@ -1215,7 +1215,7 @@
                       function (response) {
                           if (errorHandler) errorHandler(response);
                       }
-            );
+                );
         };
 
         this.slidePanelsFromLeft = function (panelAncestorClass) {
@@ -1309,33 +1309,33 @@
                 errorMessage = '';
             }
             $modal.open({
-                template: '<div class="modal-header" ng-click="onClick($event)"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body" ng-click="onClick($event)">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
-                controller: function ($scope, $modalInstance, dialogTitle) {
-                    $scope.dialogTitle = dialogTitle;
-                    $scope.errorMessage = errorMessage;
-                    $scope.errorInfo = errorInfo;
-                    $scope.ok = function () {
-                        $modalInstance.close();
-                    };
-                    $scope.onClick = function (event) {
-                        if ($scope.errorInfo && event && event.shiftKey) {
-                            thisService.showMessageDialog({
-                                message: '<pre>' + errorInfo + '</pre>',
-                                dialogWidth: '90percent'
-                            });
-                        }
-                    };
-                },
-                windowClass: !dialogTitle || dialogTitle.length > 25
-                    ? 'ji-error-dialog-lg'
-                    : 'ji-error-dialog',
-                resolve: {
-                    dialogTitle: function () { return dialogTitle; },
-                    errorMessage: function () { return errorMessage; },
-                    errorInfo: function () { return errorInfo; }
-                },
-                backdrop: false
-            });
+                            template: '<div class="modal-header" ng-click="onClick($event)"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body" ng-click="onClick($event)">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
+                            controller: function ($scope, $modalInstance, dialogTitle) {
+                                $scope.dialogTitle = dialogTitle;
+                                $scope.errorMessage = errorMessage;
+                                $scope.errorInfo = errorInfo;
+                                $scope.ok = function () {
+                                    $modalInstance.close();
+                                };
+                                $scope.onClick = function (event) {
+                                    if ($scope.errorInfo && event && event.shiftKey) {
+                                        thisService.showMessageDialog({
+                                                                          message: '<pre>' + errorInfo + '</pre>',
+                                                                          dialogWidth: '90percent'
+                                                                      });
+                                    }
+                                };
+                            },
+                            windowClass: !dialogTitle || dialogTitle.length > 25
+                                ? 'ji-error-dialog-lg'
+                                : 'ji-error-dialog',
+                            resolve: {
+                                dialogTitle: function () { return dialogTitle; },
+                                errorMessage: function () { return errorMessage; },
+                                errorInfo: function () { return errorInfo; }
+                            },
+                            backdrop: false
+                        });
         };
 
         this.showMessageDialog = function (messageOrOptions) {
@@ -1348,49 +1348,49 @@
                 options.buttons = [{class: 'btn-primary', title: 'Ok'}]
             }
             $modal.open({
-                template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="$sce.trustAsHtml(options.title)"></h3></div>\n<div class="modal-body" ng-bind-html="$sce.trustAsHtml(options.message)"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button)" ng-bind-html="$sce.trustAsHtml(button.title)"></button>\n</div>',
-                controller: function ($scope, $sce, $modalInstance, options) {
-                    $scope.$sce = $sce;
-                    $scope.options = options;
-                    $scope.buttonClicked = function (button) {
-                        $modalInstance.close();
-                        if (button.action) {
-                            button.action();
-                        }
-                    };
-                },
-                windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
-                resolve: {
-                    options: function () { return options; }
-                },
-                backdrop: false
-            });
+                            template: '<div ng-show="options.title" class="modal-header"><h3 class="modal-title" ng-bind-html="$sce.trustAsHtml(options.title)"></h3></div>\n<div class="modal-body" ng-bind-html="$sce.trustAsHtml(options.message)"></div>\n<div class="modal-footer" ng-style="!options.title ? {\'border-top-style\': \'none\'} : null">\n    <button ng-repeat="button in options.buttons" class="btn" ng-class="button.class" ng-click="buttonClicked(button)" ng-bind-html="$sce.trustAsHtml(button.title)"></button>\n</div>',
+                            controller: function ($scope, $sce, $modalInstance, options) {
+                                $scope.$sce = $sce;
+                                $scope.options = options;
+                                $scope.buttonClicked = function (button) {
+                                    $modalInstance.close();
+                                    if (button.action) {
+                                        button.action();
+                                    }
+                                };
+                            },
+                            windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
+                            resolve: {
+                                options: function () { return options; }
+                            },
+                            backdrop: false
+                        });
         };
 
         this.showPickDateDialog = function (dialogTitle) {
             var providedResultHandler;
             $modal.open({
-                template: "<div ng-if=\"dialogTitle\" class=\"modal-header\"><h4 class=\"modal-title\">{{dialogTitle}}</h4></div>\n<div class=\"modal-body\" style=\"text-align: center; padding: 15px\">\n    <div style=\"display:inline-block; text-align: right\">\n        <datepicker ng-model=\"selectedDate\" min-date=\"minDate\" show-weeks=\"false\" ng-change=\"dateSelected(selectedDate)\"></datepicker>\n        <button class=\"btn-sm btn-default\" style=\'margin-top: 10px; padding: 3px\' ng-click=\"cancel()\">Cancel</button>\n    </div>\n</div>",
-                controller: function ($scope, $modalInstance, dialogTitle) {
-                    $scope.dialogTitle = dialogTitle;
-                    $scope.dateSelected = function (selectedDate) {
-                        if (providedResultHandler) {
-                            providedResultHandler(selectedDate);
-                        }
-                        $modalInstance.close();
-                    };
-                    $scope.cancel = function () {
-                        $modalInstance.close();
-                    };
-                },
-                windowClass: dialogTitle && dialogTitle.length > 25
-                    ? 'ji-date-dialog-lg'
-                    : 'ji-date-dialog',
-                resolve: {
-                    dialogTitle: function () { return dialogTitle; }
-                },
-                backdrop: false
-            });
+                            template: "<div ng-if=\"dialogTitle\" class=\"modal-header\"><h4 class=\"modal-title\">{{dialogTitle}}</h4></div>\n<div class=\"modal-body\" style=\"text-align: center; padding: 15px\">\n    <div style=\"display:inline-block; text-align: right\">\n        <datepicker ng-model=\"selectedDate\" min-date=\"minDate\" show-weeks=\"false\" ng-change=\"dateSelected(selectedDate)\"></datepicker>\n        <button class=\"btn-sm btn-default\" style=\'margin-top: 10px; padding: 3px\' ng-click=\"cancel()\">Cancel</button>\n    </div>\n</div>",
+                            controller: function ($scope, $modalInstance, dialogTitle) {
+                                $scope.dialogTitle = dialogTitle;
+                                $scope.dateSelected = function (selectedDate) {
+                                    if (providedResultHandler) {
+                                        providedResultHandler(selectedDate);
+                                    }
+                                    $modalInstance.close();
+                                };
+                                $scope.cancel = function () {
+                                    $modalInstance.close();
+                                };
+                            },
+                            windowClass: dialogTitle && dialogTitle.length > 25
+                                ? 'ji-date-dialog-lg'
+                                : 'ji-date-dialog',
+                            resolve: {
+                                dialogTitle: function () { return dialogTitle; }
+                            },
+                            backdrop: false
+                        });
             return {
                 then: function (resultHandler) {
                     providedResultHandler = resultHandler;
@@ -1399,59 +1399,50 @@
         };
 
         this.ngGridTextSearchFilter = function (gridOptions, searchText, item) {
+
             if (!gridOptions) throw new Error("gridOptions must be provided");
             if (!item) return null;
             if (!searchText) return item;
 
-            var searchRegExp = new RegExp("(" + searchText + ")", "i");
-            var newItem = angular.copy(item);
-            newItem.originalItem = item;
-            var fieldsToSearch = determineFieldsToSearch();
+            function anythingFound() {
 
-            // Highlight any search pattern occurrences
-            findAndHighlightHits(fieldsToSearch);
-            if (anythingFound(fieldsToSearch)) {
-                return newItem;
-            } else {
-                return null;
-            }
+                function determineFieldsToSearch() {
+                    var i, fields = [];
+                    if (gridOptions.$gridScope) {  // ng-grid
+                        var candidateColumns = gridOptions.$gridScope.columns;
+                        for (i = 0; i < candidateColumns.length; i++) {
+                            if (candidateColumns[i].colDef.textSearchable && candidateColumns[i].visible) {
+                                fields.push(candidateColumns[i].field)
+                            }
+                        }
+                    } else {                       // ui-grid
+                        for (i = 0; i < gridOptions.columnDefs.length; i++) {
+                            if (gridOptions.columnDefs[i].textSearchable && (gridOptions.columnDefs[i].visible == undefined || gridOptions.columnDefs[i].visible)) {
+                                fields.push(gridOptions.columnDefs[i].field)
+                            }
+                        }
+                    }
+                    return fields;
+                }
 
-            function anythingFound(fieldNames) {
+                var fieldNames = determineFieldsToSearch();
+                var searchRegExp = new RegExp("(" + searchText + ")", "i");
+
                 for (var i = 0; i < fieldNames.length; i++) {
-                    if (item[fieldNames[i]] + '' !== newItem[fieldNames[i]] + '') {
+                    if (item[fieldNames[i]] + '' && (item[fieldNames[i]] + '').match(searchRegExp)) {
                         return true;
                     }
                 }
                 return false;
             }
 
-            function findAndHighlightHits(fieldNames) {
-                for (var i = 0; i < fieldNames.length; i++) {
-                    if (newItem[fieldNames[i]]) {
-                        newItem[fieldNames[i]] = (newItem[fieldNames[i]] + '').replace(searchRegExp, "<span class='ji-found-text'>$1</span>");
-                    }
-                }
-            }
+            return anythingFound() ? item : null;
 
-            function determineFieldsToSearch() {
-                var i, fields = [];
-                if (gridOptions.$gridScope) {  // ng-grid
-                    var candidateColumns = gridOptions.$gridScope.columns;
-                    for (i = 0; i < candidateColumns.length; i++) {
-                        if (candidateColumns[i].colDef.textSearchable && candidateColumns[i].visible) {
-                            fields.push(candidateColumns[i].field)
-                        }
-                    }
-                } else {                       // ui-grid
-                    for (i = 0; i < gridOptions.columnDefs.length; i++) {
-                        if (gridOptions.columnDefs[i].textSearchable && (gridOptions.columnDefs[i].visible == undefined || gridOptions.columnDefs[i].visible)) {
-                            fields.push(gridOptions.columnDefs[i].field)
-                        }
-                    }
-                }
-                return fields;
-            }
+        };
 
+        this.highlightFoundText = function (text, searchText) {
+            var searchRegExp = new RegExp("(" + searchText + ")", "i");
+            return $sce.trustAsHtml(text.replace(searchRegExp, "<span class='ji-found-text'>$1</span>"));
         };
 
         this.isIn = function (item, items) {
@@ -1490,22 +1481,22 @@
 
             // Open the dialog
             return $modal.open({
-                template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
-                          '<div class="modal-body">\n' +
-                          '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
-                          '</div>\n' +
-                          '<div class="modal-footer" style="margin-top: -5px">\n' +
-                          '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
-                          '</div>',
-                controller: DialogController,
-                windowClass: 'ji-job-dialog',
-                resolve: {
-                    dialogTitle: function () { return dialogTitle; },
-                    startUrl: function () { return startUrl; },
-                    uploadInputFile: function () { return uploadInputFile; }
-                },
-                backdrop: false
-            });
+                                   template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
+                                             '<div class="modal-body">\n' +
+                                             '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
+                                             '</div>\n' +
+                                             '<div class="modal-footer" style="margin-top: -5px">\n' +
+                                             '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
+                                             '</div>',
+                                   controller: DialogController,
+                                   windowClass: 'ji-job-dialog',
+                                   resolve: {
+                                       dialogTitle: function () { return dialogTitle; },
+                                       startUrl: function () { return startUrl; },
+                                       uploadInputFile: function () { return uploadInputFile; }
+                                   },
+                                   backdrop: false
+                               });
 
 
         }
@@ -1534,14 +1525,14 @@
                 var formData = new FormData();
                 formData.append("file", csvUploadInput.files[0]);
                 $http({
-                    method: 'POST',
-                    url: startUrl,
-                    headers: {'Content-Type': undefined},
-                    data: formData,
-                    transformRequest: function (data, headersGetterFunction) {
-                        return data;
-                    }
-                })
+                          method: 'POST',
+                          url: startUrl,
+                          headers: {'Content-Type': undefined},
+                          data: formData,
+                          transformRequest: function (data, headersGetterFunction) {
+                              return data;
+                          }
+                      })
                     .then(function (response) {
                               var job = response.data;
                               $scope.log = job.log;
@@ -1608,77 +1599,77 @@
 
         this.open = function (successHandler, requestedPasswordResetHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
             $modal.open({
-                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">{{requestingPasswordReset ? 'Reset Password' : 'Logon'}}</h3></div>\n" +
-                          "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
-                          "\n" +
-                          "            <div class=\"modal-body\">\n" +
-                          "                <br/>\n" +
-                          "\n" +
-                          "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
-                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-3 control-label\">Username</label>\n" +
-                          "\n" +
-                          "                        <div class=\"col-sm-9\">\n" +
-                          "                            <input ng-if=\"focusUsername\" name=\"username\" autofocus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
-                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
-                          "                            <input ng-if=\"!focusUsername\" name=\"username\"          placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
-                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
-                          "\n" +
-                          "                        </div>\n" +
-                          "                    </div>\n" +
-                          "\n" +
-                          "                    <div ng-if=\"!requestingPasswordReset\" class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-3 control-label\">Password</label>\n" +
-                          "\n" +
-                          "                        <div class=\"col-sm-9\">\n" +
-                          "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
-                          "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
-                          "\n" +
-                          "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
-                          "\n" +
-                          "                        </div>\n" +
-                          "                    </div>\n" +
-                          "\n" +
-                          "                </form>\n" +
-                          "\n" +
-                          "            </div>\n" +
-                          "            <div style='position: absolute; right: 0; bottom: 0; left: 0'>\n" +
-                          "                <div ng-hide=\"requestingPasswordReset || !requestedPasswordResetHandler\" style=\"padding-left: 10px; margin-bottom: 6px\">\n" +
-                          "                    <a  ng-click=\"onForgotYourPasswordClick()\" style=\"cursor: pointer\">Forgot your Password?</a>\n" +
-                          "                </div>\n" +
-                          "                <div class=\"modal-footer\" style='position: relative'>\n" +
-                          "                    <div style=\"position:relative; width: 100%\">\n" +
-                          "                        <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
-                          "                        <button class=\"btn btn-primary\" ng-click=\"onOkButtonClick(mainForm)\">{{requestingPasswordReset ? 'Request reset' : 'Logon'}}</button>\n" +
-                          "                    </div>\n" +
-                          "                </div>\n" +
-                          "            </div>\n" +
-                          "\n" +
-                          "</div>\n",
-                controller: 'LogonDialogController',
-                windowClass: 'ji-logon-dialog',
-                resolve: {
-                    requestedPasswordResetHandler: function () {
-                        return requestedPasswordResetHandler;
-                    },
-                    loginProcessingUrl: function () {
-                        return loginProcessingUrl;
-                    },
-                    usernameParameter: function () {
-                        return usernameParameter;
-                    },
-                    passwordParameter: function () {
-                        return passwordParameter;
-                    }
-                },
-                backdrop: false
-            }).result.then(successHandler);
+                            template: "<div class=\"modal-header\"><h3 class=\"modal-title\">{{requestingPasswordReset ? 'Reset Password' : 'Logon'}}</h3></div>\n" +
+                                      "<div class=\"ji-logon-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
+                                      "\n" +
+                                      "            <div class=\"modal-body\">\n" +
+                                      "                <br/>\n" +
+                                      "\n" +
+                                      "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
+                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
+                                      "                        <label class=\"col-sm-3 control-label\">Username</label>\n" +
+                                      "\n" +
+                                      "                        <div class=\"col-sm-9\">\n" +
+                                      "                            <input ng-if=\"focusUsername\" name=\"username\" autofocus placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
+                                      "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                                      "                            <input ng-if=\"!focusUsername\" name=\"username\"          placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
+                                      "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
+                                      "\n" +
+                                      "                        </div>\n" +
+                                      "                    </div>\n" +
+                                      "\n" +
+                                      "                    <div ng-if=\"!requestingPasswordReset\" class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
+                                      "                        <label class=\"col-sm-3 control-label\">Password</label>\n" +
+                                      "\n" +
+                                      "                        <div class=\"col-sm-9\">\n" +
+                                      "                            <input ng-if=\"!focusUsername\" name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                                      "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
+                                      "                            <input ng-if=\"focusUsername\" name=\"password\"            ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                                      "                                   ng-keyup=\"passwordInputKeyUp(mainForm, $event)\">\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine && !logonFailed\" class=\"help-block\">Password is required</p>\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
+                                      "\n" +
+                                      "                        </div>\n" +
+                                      "                    </div>\n" +
+                                      "\n" +
+                                      "                </form>\n" +
+                                      "\n" +
+                                      "            </div>\n" +
+                                      "            <div style='position: absolute; right: 0; bottom: 0; left: 0'>\n" +
+                                      "                <div ng-hide=\"requestingPasswordReset || !requestedPasswordResetHandler\" style=\"padding-left: 10px; margin-bottom: 6px\">\n" +
+                                      "                    <a  ng-click=\"onForgotYourPasswordClick()\" style=\"cursor: pointer\">Forgot your Password?</a>\n" +
+                                      "                </div>\n" +
+                                      "                <div class=\"modal-footer\" style='position: relative'>\n" +
+                                      "                    <div style=\"position:relative; width: 100%\">\n" +
+                                      "                        <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
+                                      "                        <button class=\"btn btn-primary\" ng-click=\"onOkButtonClick(mainForm)\">{{requestingPasswordReset ? 'Request reset' : 'Logon'}}</button>\n" +
+                                      "                    </div>\n" +
+                                      "                </div>\n" +
+                                      "            </div>\n" +
+                                      "\n" +
+                                      "</div>\n",
+                            controller: 'LogonDialogController',
+                            windowClass: 'ji-logon-dialog',
+                            resolve: {
+                                requestedPasswordResetHandler: function () {
+                                    return requestedPasswordResetHandler;
+                                },
+                                loginProcessingUrl: function () {
+                                    return loginProcessingUrl;
+                                },
+                                usernameParameter: function () {
+                                    return usernameParameter;
+                                },
+                                passwordParameter: function () {
+                                    return passwordParameter;
+                                }
+                            },
+                            backdrop: false
+                        }).result.then(successHandler);
         }
 
     }
@@ -1746,9 +1737,9 @@
         function logon() {
             $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'authenticateUser'),
                        (usernameParameter ? usernameParameter : 'username') + '=' + encodeURIComponent($scope.model.username) + '&' + (passwordParameter ? passwordParameter : 'password') + '=' + encodeURIComponent($scope.model.password),
-                {
-                    headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
-                })
+                       {
+                           headers: {"Content-type": "application/x-www-form-urlencoded; charset=utf-8"}
+                       })
                 .then(function (response) {
                           $scope.logonFailed = false;
                           if (html5StorageSupported()) {
@@ -1768,7 +1759,7 @@
                               ji.showErrorDialog(response);
                           }
                       }
-            );
+                );
         }
 
         function cancel() {
@@ -1781,77 +1772,77 @@
 
         this.open = function (username, successHandler) {
             $modal.open({
-                template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Reset Password</h3></div>\n" +
-                          "<div class=\"ji-resetpassword-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
-                          "\n" +
-                          "    <div>\n" +
-                          "        <div>\n" +
-                          "            <div class=\"modal-body\">\n" +
-                          "                <br/>\n" +
-                          "\n" +
-                          "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
-                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
-                          "\n" +
-                          "                        <div class=\"col-sm-8\">\n" +
-                          "                            <input name=\"username\" disabled placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
-                          "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
-                          "\n" +
-                          "                        </div>\n" +
-                          "                    </div>\n" +
-                          "\n" +
-                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
-                          "\n" +
-                          "                        <div class=\"col-sm-8\">\n" +
-                          "                            <input name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine\" class=\"help-block\">Password is required</p>\n" +
-                          "\n" +
-                          "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
-                          "\n" +
-                          "                        </div>\n" +
-                          "                    </div>\n" +
-                          "\n" +
-                          "                    <div class=\"form-group\" ng-class=\"{ 'has-error' : mainForm.confirmPassword.$invalid && !mainForm.confirmPassword.$pristine }\">\n" +
-                          "                        <label class=\"col-sm-4 control-label\">Confirm&nbsp;password</label>\n" +
-                          "\n" +
-                          "                        <div class=\"col-sm-8\">\n" +
-                          "                            <input name=\"confirmPassword\" ji-scope-element=\"confirmPasswordInput\" type=\"password\" placeholder=\"password again\" class=\"form-control\" ng-model=\"model.confirmPassword\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
-                          "                                   ng-keyup=\"confirmPasswordInputKeyUp(mainForm, $event)\">\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.required && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation of password is required</p>\n" +
-                          "\n" +
-                          "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.passwordMatch && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation password does not match password</p>\n" +
-                          "\n" +
-                          "                        </div>\n" +
-                          "                    </div>\n" +
-                          "\n" +
-                          "                </form>\n" +
-                          "\n" +
-                          "            </div>\n" +
-                          "            <div class=\"modal-footer\">\n" +
-                          "                <div style=\"position:relative; width: 100%\">\n" +
-                          "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
-                          "                    <button class=\"btn btn-primary\" ng-click=\"onOk(mainForm)\">Ok</button>\n" +
-                          "                </div>\n" +
-                          "            </div>\n" +
-                          "        </div>\n" +
-                          "    </div>\n" +
-                          "\n" +
-                          "</div>\n",
-                controller: 'ResetPasswordDialogController',
-                windowClass: 'ji-resetpassword-dialog',
-                resolve: {
-                    username: function () {
-                        return username;
-                    }
-                },
-                backdrop: false
-            }).result.then(successHandler);
+                            template: "<div class=\"modal-header\"><h3 class=\"modal-title\">Reset Password</h3></div>\n" +
+                                      "<div class=\"ji-resetpassword-dialog panel-container\" style=\"position: relative; overflow: hidden\">\n" +
+                                      "\n" +
+                                      "    <div>\n" +
+                                      "        <div>\n" +
+                                      "            <div class=\"modal-body\">\n" +
+                                      "                <br/>\n" +
+                                      "\n" +
+                                      "                <form name=\"mainForm\" ji-form class=\"form-horizontal\" role=\"form\" novalidate>  <!-- novalidate prevents HTML5 validation -->\n" +
+                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.username.$invalid && !mainForm.username.$pristine }\">\n" +
+                                      "                        <label class=\"col-sm-4 control-label\">Username</label>\n" +
+                                      "\n" +
+                                      "                        <div class=\"col-sm-8\">\n" +
+                                      "                            <input name=\"username\" disabled placeholder=\"username\" class=\"form-control\" ng-model=\"model.username\" required style=\"width: 20em\"\n" +
+                                      "                                   ng-keyup=\"usernameInputKeyUp($event)\">\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.username.$jiHasFocus && mainForm.username.$error.required && !mainForm.username.$pristine\" class=\"help-block\">Username is required</p>\n" +
+                                      "\n" +
+                                      "                        </div>\n" +
+                                      "                    </div>\n" +
+                                      "\n" +
+                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' :mainForm.password.$invalid && !mainForm.password.$pristine }\">\n" +
+                                      "                        <label class=\"col-sm-4 control-label\">Password</label>\n" +
+                                      "\n" +
+                                      "                        <div class=\"col-sm-8\">\n" +
+                                      "                            <input name=\"password\" autofocus ji-scope-element=\"passwordInput\" type=\"password\" placeholder=\"password\" class=\"form-control\" ng-model=\"model.password\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                                      "                                   ng-keyup=\"passwordInputKeyUp($event)\">\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.password.$jiHasFocus && mainForm.password.$error.required && !mainForm.password.$pristine\" class=\"help-block\">Password is required</p>\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"logonFailed\" class=\"help-block\">Logon failed</p>\n" +
+                                      "\n" +
+                                      "                        </div>\n" +
+                                      "                    </div>\n" +
+                                      "\n" +
+                                      "                    <div class=\"form-group\" ng-class=\"{ 'has-error' : mainForm.confirmPassword.$invalid && !mainForm.confirmPassword.$pristine }\">\n" +
+                                      "                        <label class=\"col-sm-4 control-label\">Confirm&nbsp;password</label>\n" +
+                                      "\n" +
+                                      "                        <div class=\"col-sm-8\">\n" +
+                                      "                            <input name=\"confirmPassword\" ji-scope-element=\"confirmPasswordInput\" type=\"password\" placeholder=\"password again\" class=\"form-control\" ng-model=\"model.confirmPassword\" required style=\"width: 20em; padding: 6px 12px; font-size: 14px\"\n" +
+                                      "                                   ng-keyup=\"confirmPasswordInputKeyUp(mainForm, $event)\">\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.required && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation of password is required</p>\n" +
+                                      "\n" +
+                                      "                            <p ng-show=\"mainForm.confirmPassword.$jiHasFocus && mainForm.confirmPassword.$error.passwordMatch && !mainForm.confirmPassword.$pristine\" class=\"help-block\">Confirmation password does not match password</p>\n" +
+                                      "\n" +
+                                      "                        </div>\n" +
+                                      "                    </div>\n" +
+                                      "\n" +
+                                      "                </form>\n" +
+                                      "\n" +
+                                      "            </div>\n" +
+                                      "            <div class=\"modal-footer\">\n" +
+                                      "                <div style=\"position:relative; width: 100%\">\n" +
+                                      "                    <button class=\"btn btn-warning\" style=\"position: absolute; left: 0\" ng-click=\"cancel()\">Cancel</button>\n" +
+                                      "                    <button class=\"btn btn-primary\" ng-click=\"onOk(mainForm)\">Ok</button>\n" +
+                                      "                </div>\n" +
+                                      "            </div>\n" +
+                                      "        </div>\n" +
+                                      "    </div>\n" +
+                                      "\n" +
+                                      "</div>\n",
+                            controller: 'ResetPasswordDialogController',
+                            windowClass: 'ji-resetpassword-dialog',
+                            resolve: {
+                                username: function () {
+                                    return username;
+                                }
+                            },
+                            backdrop: false
+                        }).result.then(successHandler);
         }
 
     }
@@ -1918,7 +1909,7 @@ JiGlobal = {
 
     // Debugging utility (to provide a place to trigger debugger inspection of an expression in an angular
     // template where errors are normally "swallowed" silently.
-    pipe: function(parameter) {
+    pipe: function (parameter) {
         return parameter;
     },
 
