@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.119.js
+ ji-angular-1.0.120.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1442,7 +1442,7 @@
 
         this.highlightFoundText = function (text, searchText) {
             var searchRegExp = new RegExp("(" + searchText + ")", "i");
-            return $sce.trustAsHtml(text.replace(searchRegExp, "<span class='ji-found-text'>$1</span>"));
+            return $sce.trustAsHtml((text + '').replace(searchRegExp, "<span class='ji-found-text'>$1</span>"));
         };
 
         this.isIn = function (item, items) {
