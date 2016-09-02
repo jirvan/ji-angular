@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.121.js
+ ji-angular-1.0.122.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1481,31 +1481,32 @@
 
         this.openDialogAndStartJob = openDialogAndStartJob;
 
-        function openDialogAndStartJob(dialogTitle, startUrl, uploadInputFile) {
+        function openDialogAndStartJob(dialogTitle, startUrl, uploadInputFile, postBody) {
 
             // Open the dialog
             return $modal.open({
-                                   template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
-                                             '<div class="modal-body">\n' +
-                                             '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
-                                             '</div>\n' +
-                                             '<div class="modal-footer" style="margin-top: -5px">\n' +
-                                             '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
-                                             '</div>',
-                                   controller: DialogController,
-                                   windowClass: 'ji-job-dialog',
-                                   resolve: {
-                                       dialogTitle: function () { return dialogTitle; },
-                                       startUrl: function () { return startUrl; },
-                                       uploadInputFile: function () { return uploadInputFile; }
-                                   },
-                                   backdrop: false
-                               });
+                template: '<div class="modal-header"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n' +
+                          '<div class="modal-body">\n' +
+                          '    <textarea ji-scope-element="logTextArea" ng-model="log" readonly style="resize: none; border: none; font-size: 12px; min-height: 350px; width: 100%; padding: 10px"></textarea>\n' +
+                          '</div>\n' +
+                          '<div class="modal-footer" style="margin-top: -5px">\n' +
+                          '    <button ji-scope-element="okButton" class="btn btn-primary" ng-click="ok()" ng-disabled="okButtonDisabled">Ok</button>\n' +
+                          '</div>',
+                controller: DialogController,
+                windowClass: 'ji-job-dialog',
+                resolve: {
+                    dialogTitle: function () { return dialogTitle; },
+                    startUrl: function () { return startUrl; },
+                    uploadInputFile: function () { return uploadInputFile; },
+                    postBody: function () { return postBody; }
+                },
+                backdrop: false
+            });
 
 
         }
 
-        function DialogController($scope, $http, $modalInstance, $timeout, ji, dialogTitle, startUrl, uploadInputFile) {
+        function DialogController($scope, $http, $modalInstance, $timeout, ji, dialogTitle, startUrl, uploadInputFile, postBody) {
 
             $scope.dialogTitle = dialogTitle;
             $scope.log = null;
@@ -1514,7 +1515,7 @@
             if (uploadInputFile) {
                 startUploadJob();
             } else {
-                startJob();
+                startJob(postBody);
             }
 
             function scrollBottom() {
@@ -1529,14 +1530,14 @@
                 var formData = new FormData();
                 formData.append("file", csvUploadInput.files[0]);
                 $http({
-                          method: 'POST',
-                          url: startUrl,
-                          headers: {'Content-Type': undefined},
-                          data: formData,
-                          transformRequest: function (data, headersGetterFunction) {
-                              return data;
-                          }
-                      })
+                    method: 'POST',
+                    url: startUrl,
+                    headers: {'Content-Type': undefined},
+                    data: formData,
+                    transformRequest: function (data, headersGetterFunction) {
+                        return data;
+                    }
+                })
                     .then(function (response) {
                               var job = response.data;
                               $scope.log = job.log;
@@ -1555,7 +1556,7 @@
             }
 
             function startJob() {
-                $http.post(startUrl)
+                $http.post(startUrl, postBody)
                     .then(function (response) {
                               var job = response.data;
                               $scope.log = job.log;
