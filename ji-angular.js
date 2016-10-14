@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.122.js
+ ji-angular-1.0.123.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1280,30 +1280,43 @@
                 //if (response.ignore) {
                 //    return;
                 //} else
+
                 if (response.data && response.data.errorName) {
                     dialogTitle = response.data.errorName;
-                    errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
                 } else if (response.error && response.message) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error: ' + response.error : 'Error';
-                    errorMessage = response.message;
                 } else if (response.data && response.data.error && response.data.message) {
                     dialogTitle = response.data.status ? 'HTTP ' + response.data.status + ' error: ' + response.data.error : 'Error';
-                    errorMessage = response.data.message;
                 } else if (response.config && response.config.url) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
-                    errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
                 } else if (response.message) {
                     dialogTitle = response.status ? 'HTTP ' + response.status + ' error' : 'Error';
-                    errorMessage = response.message;
                 } else {
                     dialogTitle = 'Error ';
+                }
+
+                if (response.data && response.data.errorName) {
+                    errorMessage = response.data.errorMessage ? response.data.errorMessage : JSON.stringify(response);
+                } else if (response.error && response.message) {
+                    errorMessage = response.message;
+                } else if (response.data && response.data.error && response.data.message) {
+                    errorMessage = response.data.message;
+                } else if (response.config && response.config.url) {
+                    errorMessage = response.statusText ? response.statusText + ' for ' + response.config.url : 'For ' + response.config.url;
+                } else if (response.message) {
+                    errorMessage = response.message;
+                } else if (response.errorMessage) {
+                    errorMessage = response.errorMessage;
+                } else {
                     errorMessage = typeof response === 'string' ? response : JSON.stringify(response);
                 }
+
                 if (response.errorInfo) {
                     errorInfo = response.errorInfo;
                 } else if (response.data && response.data.errorInfo) {
                     errorInfo = response.data.errorInfo;
                 }
+
             } else {
                 dialogTitle = 'Error ';
                 errorMessage = '';
