@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.124.js
+ ji-angular-1.0.125.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1333,7 +1333,7 @@
             //} else
             var errorObject = this.extractErrorObject(response);
             $modal.open({
-                            template: '<div class="modal-header" ng-click="onClick($event)"><h3 class="modal-title">{{errorObject.dialogTitle}}</h3></div>\n<div class="modal-body" ng-click="onClick($event)">\n    {{errorObject.errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
+                            template: '<div class="modal-header" ng-click="onClick($event)"><h3 class="modal-title">{{dialogTitle}}</h3></div>\n<div class="modal-body" ng-click="onClick($event)">\n    {{errorMessage}}\n</div>\n<div class="modal-footer">\n    <button class="btn btn-danger" ng-click="ok()">Ok</button>\n</div>',
                             controller: function ($scope, $modalInstance, dialogTitle) {
                                 $scope.dialogTitle = dialogTitle;
                                 $scope.errorMessage = errorObject.errorMessage;
