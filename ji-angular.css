@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.127.css
+ji-angular-1.0.128.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -158,57 +158,75 @@ ji-angular-1.0.127.css
 .ji-message-dialog-100px .modal-dialog {
     width: 100px;
 }
+
 .ji-message-dialog-150px .modal-dialog {
     width: 150px;
 }
+
 .ji-message-dialog-200px .modal-dialog {
     width: 200px;
 }
+
 .ji-message-dialog-250px .modal-dialog {
     width: 250px;
 }
+
 .ji-message-dialog-300px .modal-dialog {
     width: 300px;
 }
+
 .ji-message-dialog-350px .modal-dialog {
     width: 350px;
 }
+
 .ji-message-dialog-400px .modal-dialog {
     width: 400px;
 }
+
 .ji-message-dialog-450px .modal-dialog {
     width: 450px;
 }
+
 .ji-message-dialog-500px .modal-dialog {
     width: 500px;
 }
+
 .ji-message-dialog-550px .modal-dialog {
     width: 550px;
 }
+
 .ji-message-dialog-600px .modal-dialog {
     width: 600px;
 }
+
 .ji-message-dialog-650px .modal-dialog {
     width: 650px;
 }
+
 .ji-message-dialog-700px .modal-dialog {
     width: 700px;
 }
+
 .ji-message-dialog-750px .modal-dialog {
     width: 750px;
 }
+
 .ji-message-dialog-800px .modal-dialog {
     width: 800px;
 }
+
 .ji-message-dialog-850px .modal-dialog {
     width: 850px;
 }
+
 .ji-message-dialog-900px .modal-dialog {
     width: 900px;
 }
+
 .ji-message-dialog-950px .modal-dialog {
     width: 950px;
 }
+
 .ji-message-dialog-90percent .modal-dialog {
     width: 90%;
     height: 90%;
@@ -227,6 +245,7 @@ ji-angular-1.0.127.css
 .ji-job-dialog .modal-dialog {
     width: 650px;
 }
+
 .ji-job-dialog div.modal-body {
     padding: 0;
 }
@@ -236,13 +255,16 @@ ji-angular-1.0.127.css
     height: 250px;
     width: 500px;
 }
+
 .ji-logon-dialog div.modal-body form {
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .ji-logon-dialog .modal-dialog {
     width: 500px;
 }
+
 .ji-logon-dialog .modal-footer {
     position: absolute;
     right: 0;
@@ -255,13 +277,16 @@ ji-angular-1.0.127.css
     height: 300px;
     width: 550px;
 }
+
 .ji-resetpassword-dialog div.modal-body form {
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .ji-resetpassword-dialog .modal-dialog {
     width: 550px;
 }
+
 .ji-resetpassword-dialog .modal-footer {
     position: absolute;
     right: 0;
@@ -288,6 +313,22 @@ div.ji-vertical-tabset div.ji-tab-pane {
     border-bottom-left-radius: 4px;
     border-top-left-radius: 0;
     min-height: 386px;
+}
+
+div.ji-vertical-tabset div.ji-tab-pane div.ji-button-bar {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    padding: 15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+div.ji-vertical-tabset div.ji-tab-pane div.ji-button-bar .pull-right {
+    margin-left: 10px;
 }
 
 div.ji-vertical-tabset div.ji-tabs > div {
