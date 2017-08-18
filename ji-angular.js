@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.128.js
+ ji-angular-1.0.129.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -35,7 +35,7 @@
 
     angular.module('jiAngular', [])
 
-        //========== ji service ==========//
+    //========== ji service ==========//
         .factory('ji', ['$filter', '$modal', '$http', '$sce', function ($filter, $modal, $http, $sce) { return new JiService($filter, $modal, $http, $sce); }])
 
         //========== jiJob service ==========//
@@ -1199,6 +1199,14 @@
         this.firstAncestorWithTagName = firstAncestorWithTagName;
 
         this.nestedProperty = nestedProperty;
+
+        this.viewPort = function () {
+            var body = document.getElementsByTagName('body')[0];
+            return {
+                width: window.innerWidth || document.documentElement.clientWidth || body.clientWidth,
+                height: window.innerHeight || document.documentElement.clientHeight || body.clientHeight
+            };
+        };
 
         this.logon = function (username, password, successHandler, errorHandler, loginProcessingUrl, usernameParameter, passwordParameter) {
             $http.post('/' + (loginProcessingUrl ? loginProcessingUrl : 'authenticateUser'),

@@ -1,6 +1,6 @@
 {
     "name": "ji-angular",
-    "version": "1.0.128",
+    "version": "1.0.129",
     "description": "jirvan utilities library for AngularJS applications",
     "main": [
         "./ji-angular.css",
