@@ -1,6 +1,6 @@
 /*
 
-ji-angular-1.0.129.css
+ji-angular-1.0.130.css
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -146,15 +146,23 @@ ji-angular-1.0.129.css
     width: 600px;
 }
 
-.ji-error-dialog div.modal-content, .ji-error-dialog-lg div.modal-content {
+.ji-error-dialog-mobile .modal-dialog {
+    width: 95%;
+}
+
+.ji-error-dialog div.modal-content, .ji-error-dialog-lg, .ji-error-dialog-mobile div.modal-content {
     border-color: #a94442;
 }
 
-.ji-error-dialog div.modal-header, .ji-error-dialog-lg div.modal-header {
+.ji-error-dialog div.modal-header, .ji-error-dialog-lg, .ji-error-dialog-mobile div.modal-header {
     color: #a94442;
 }
 
 /* ji-message-dialog */
+.ji-message-dialog-mobile .modal-dialog {
+    width: 95%;
+}
+
 .ji-message-dialog-100px .modal-dialog {
     width: 100px;
 }

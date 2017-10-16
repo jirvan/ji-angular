@@ -1,6 +1,6 @@
 /*
 
- ji-angular-1.0.129.js
+ ji-angular-1.0.130.js
 
  Copyright (c) 2014,2015 Jirvan Pty Ltd
  All rights reserved.
@@ -1335,6 +1335,11 @@
 
         };
 
+        this.deviceAppearsToBeMobile = function () {
+            return screen.width < 775 || screen.height > screen.width;
+            // return this.viewPort().width < 775 || screen.width < 775 || screen.height > screen.width;
+        };
+
         this.showErrorDialog = function (response) {
             //if (response.ignore) {
             //    return;
@@ -1358,9 +1363,11 @@
                                     }
                                 };
                             },
-                            windowClass: !errorObject.dialogTitle || errorObject.dialogTitle.length > 25
-                                ? 'ji-error-dialog-lg'
-                                : 'ji-error-dialog',
+                            windowClass: this.deviceAppearsToBeMobile()
+                                ? 'ji-error-dialog-mobile'
+                                : (!errorObject.dialogTitle || errorObject.dialogTitle.length > 25
+                                    ? 'ji-error-dialog-lg'
+                                    : 'ji-error-dialog'),
                             resolve: {
                                 dialogTitle: function () { return errorObject.dialogTitle; },
                                 errorMessage: function () { return errorObject.errorMessage; },
@@ -1391,7 +1398,11 @@
                                     }
                                 };
                             },
-                            windowClass: options.dialogWidth ? 'ji-message-dialog-' + options.dialogWidth : 'ji-message-dialog-250px',
+                            windowClass: this.deviceAppearsToBeMobile()
+                                ? 'ji-message-dialog-mobile'
+                                : (options.dialogWidth
+                                    ? 'ji-message-dialog-' + options.dialogWidth
+                                    : 'ji-message-dialog-250px'),
                             resolve: {
                                 options: function () { return options; }
                             },
