@@ -4,6 +4,6 @@
     "description": "Library for Angular applications",
     "main": [
         "./ji-angular.module.ts",
-        "./dialog-service/dialog-service.ts"
+        "./dialog-service"
     ]
 }
