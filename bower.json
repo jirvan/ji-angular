@@ -3,6 +3,7 @@
     "version": "2.0.0",
     "description": "Library for Angular applications",
     "main": [
-        "./ji-angular"
+        "./ji-angular.module.ts",
+        "./dialog-service/dialog-service.ts"
     ]
 }
