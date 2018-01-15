@@ -32,17 +32,84 @@ import {Component, Injectable, Input, ViewEncapsulation} from '@angular/core';
 
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgbModalRef} from "@ng-bootstrap/ng-bootstrap/modal/modal-ref";
+import {JiDialogErrorObject} from "./dialogerrorobject";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Injectable()
 export class JiDialogService {
 
   constructor(private modalService: NgbModal) { }
 
-  showError(errorMessage: string): NgbModalRef {
+  showError(errorObject: any): NgbModalRef {
+    let dialogErrorObject: JiDialogErrorObject = this.extractStandardizedErrorObject(errorObject);
     const modalRef = this.modalService.open(ErrorDialogContent);
-    modalRef.componentInstance.errorMessage = errorMessage;
+    modalRef.componentInstance.errorMessage = dialogErrorObject.errorMessage;
     return modalRef;
   }
+
+  extractStandardizedErrorObject(errorObject: any) {
+    if (errorObject) {
+
+      if (typeof errorObject === "string") {
+
+        return new JiDialogErrorObject('Error', '', null);
+
+      } else if (errorObject instanceof HttpErrorResponse) {
+
+        return new JiDialogErrorObject(errorObject.name, errorObject.message, null);
+
+      } else {
+
+        let standardizedErrorObject: JiDialogErrorObject = new JiDialogErrorObject('Error', '', null);
+
+        if (errorObject.data && errorObject.data.errorName) {
+          standardizedErrorObject.dialogTitle = errorObject.data.errorName;
+        } else if (errorObject.error && errorObject.message) {
+          standardizedErrorObject.dialogTitle = errorObject.status ? 'HTTP ' + errorObject.status + ' error: ' + errorObject.error : 'Error';
+        } else if (errorObject.data && errorObject.data.error && errorObject.data.message) {
+          standardizedErrorObject.dialogTitle = errorObject.data.status ? 'HTTP ' + errorObject.data.status + ' error: ' + errorObject.data.error : 'Error';
+        } else if (errorObject.config && errorObject.config.url) {
+          standardizedErrorObject.dialogTitle = errorObject.status ? 'HTTP ' + errorObject.status + ' error' : 'Error';
+        } else if (errorObject.message) {
+          standardizedErrorObject.dialogTitle = errorObject.status ? 'HTTP ' + errorObject.status + ' error' : 'Error';
+        } else {
+          standardizedErrorObject.dialogTitle = 'Error ';
+        }
+
+        if (errorObject.data && errorObject.data.errorName) {
+          standardizedErrorObject.errorMessage = errorObject.data.errorMessage ? errorObject.data.errorMessage : JSON.stringify(errorObject);
+        } else if (errorObject.error && errorObject.message) {
+          standardizedErrorObject.errorMessage = errorObject.message;
+        } else if (errorObject.data && errorObject.data.error && errorObject.data.message) {
+          standardizedErrorObject.errorMessage = errorObject.data.message;
+        } else if (errorObject.config && errorObject.config.url) {
+          standardizedErrorObject.errorMessage = errorObject.statusText ? errorObject.statusText + ' for ' + errorObject.config.url : 'For ' + errorObject.config.url;
+        } else if (errorObject.message) {
+          standardizedErrorObject.errorMessage = errorObject.message;
+        } else if (errorObject.errorMessage) {
+          standardizedErrorObject.errorMessage = errorObject.errorMessage;
+        } else {
+          standardizedErrorObject.errorMessage = typeof errorObject === 'string' ? errorObject : JSON.stringify(errorObject);
+        }
+
+        if (errorObject.errorInfo) {
+          standardizedErrorObject.errorInfo = errorObject.errorInfo;
+        } else if (errorObject.data && errorObject.data.errorInfo) {
+          standardizedErrorObject.errorInfo = errorObject.data.errorInfo;
+        }
+
+        return standardizedErrorObject;
+      }
+
+    } else {
+
+      return new JiDialogErrorObject('Error', '', null);
+
+    }
+
+
+  };
+
 
 }
 
@@ -52,7 +119,7 @@ export class JiDialogService {
                <div class="modal-header text-danger">
                  <h4 class="modal-title">Error</h4>
                  <!--<button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">-->
-                   <!--<span aria-hidden="true">&times;</span>-->
+                 <!--<span aria-hidden="true">&times;</span>-->
                  <!--</button>-->
                </div>
                <div class="modal-body">
