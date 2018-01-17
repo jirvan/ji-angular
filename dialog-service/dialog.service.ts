@@ -52,7 +52,7 @@ export class JiDialogService {
 
       if (typeof errorObject === "string") {
 
-        return new JiDialogErrorObject('Error', '', null);
+        return new JiDialogErrorObject('Error', errorObject, null);
 
       } else if (errorObject instanceof HttpErrorResponse) {
 
