@@ -33,21 +33,21 @@ import {NgbDate} from "@ng-bootstrap/ng-bootstrap/datepicker/ngb-date";
 import {NgbDatepicker} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-             selector: 'ji-datepicker-popup',
-             templateUrl: './ji-datepicker-popup.component.html',
-             styleUrls: ['./ji-datepicker-popup.component.css']
+               selector: 'ji-datepicker-popup',
+               templateUrl: './ji-datepicker-popup.component.html',
+               styleUrls: ['./ji-datepicker-popup.component.css']
            })
 export class JiDatepickerPopupComponent {
 
-  @Input() model: NgbDate;
-  @Output() onSelect = new EventEmitter<NgbDate>();
+    @Input() model: NgbDate;
+    @Output() onSelect = new EventEmitter<NgbDate>();
 
-  showDatepicker(datepicker:any):void {
-    datepicker.toggle();
-  }
+    showDatepicker(datepicker: any): void {
+        datepicker.toggle();
+    }
 
-  onModelChange():void {
-    this.onSelect.emit(this.model);
-  }
+    onModelChange(): void {
+        this.onSelect.emit(this.model);
+    }
 
 }
