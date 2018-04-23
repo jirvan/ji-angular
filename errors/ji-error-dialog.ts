@@ -47,7 +47,7 @@ import {JiErrorHandler, StandardizedError} from './ji-errorhander';
                            </div>
                            <pre *ngIf="showAdditionalInfo">{{additionalInfo}}</pre>
                            <p-footer>
-                               <button type="button" pButton icon="fa-check" (click)="display=false" label="OK" [disabled]="okButtonDisabled"></button>
+                               <button type="button" pButton icon="fa-check" (click)="display=false" label="OK"></button>
                            </p-footer>
                        </p-dialog>
                    </div>
