@@ -42,9 +42,10 @@ export class JiErrorHandler implements ErrorHandler {
                               + (error.additionalInfo ? ':\n\n' + error.additionalInfo : '');
         if (this.errorDialog) {
             this.errorDialog.showDialog(error);
+            console.log(errorObject);
         } else {
             alert(message);
-            console.log(message);
+            console.log(errorObject);
         }
     }
 
