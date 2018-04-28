@@ -40,7 +40,7 @@ export class JiErrorHandler implements ErrorHandler {
         let error: StandardizedError = this.standardizeError(errorObject);
         let message: string = error.message
                               + (error.additionalInfo ? ':\n\n' + error.additionalInfo : '');
-        if (this.errorDialog) {
+        if (this.errorDialog && error.assumeSafeForDialog) {
             this.errorDialog.showDialog(error);
             console.log(errorObject);
         } else {
@@ -56,12 +56,14 @@ export class JiErrorHandler implements ErrorHandler {
             let basicAdditionalInfo = `HTTP Status: ${errorObject.status}\nURL:         ${errorObject.url}`;
             if (errorObject.error) {
                 return {
+                    assumeSafeForDialog: true,
                     title: errorObject.error.errorName || errorObject.name || 'Error',
                     message: errorObject.error.errorMessage || errorObject.message,
                     additionalInfo: basicAdditionalInfo + (errorObject.error.errorInfo ? '\n\n' + errorObject.error.errorInfo : '')
                 };
             } else {
                 return {
+                    assumeSafeForDialog: true,
                     title: errorObject.name || 'Error',
                     message: errorObject.message,
                     additionalInfo: basicAdditionalInfo
@@ -71,6 +73,7 @@ export class JiErrorHandler implements ErrorHandler {
 
         } else {
             return {
+                assumeSafeForDialog: false,
                 title: 'Error',
                 message: errorObject.message || errorObject,
                 additionalInfo: errorObject.stack || 'There is no additional error information'
@@ -81,6 +84,7 @@ export class JiErrorHandler implements ErrorHandler {
 }
 
 export class StandardizedError {
+    assumeSafeForDialog: boolean;
     title: string;
     message: string;
     additionalInfo: string;
