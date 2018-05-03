@@ -57,9 +57,9 @@ export class JiErrorDialog implements OnInit {
 
     @Input() errorHandlerService: JiErrorHandler;
 
-    title: string = null;
-    message: string = null;
-    additionalInfo: string = null;
+    title?: string;
+    message?: string;
+    additionalInfo?: string;
     showAdditionalInfo: boolean = false;
 
     display: boolean = false;
@@ -75,8 +75,8 @@ export class JiErrorDialog implements OnInit {
             this.additionalInfo = error.additionalInfo;
         } else {
             this.title = 'Error';
-            this.message = null;
-            this.additionalInfo = null;
+            this.message = undefined;
+            this.additionalInfo = undefined;
         }
         this.display = true;
     }

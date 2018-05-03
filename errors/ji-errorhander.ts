@@ -34,7 +34,7 @@ import {JiErrorDialog} from "./ji-error-dialog";
 
 export class JiErrorHandler implements ErrorHandler {
 
-    errorDialog: JiErrorDialog = null;
+    errorDialog: JiErrorDialog;
 
     handleError(errorObject) {
         let error: StandardizedError = this.standardizeError(errorObject);
