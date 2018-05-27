@@ -36,10 +36,12 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                    <div style="position: relative" [ngStyle]="style" [ngClass]="class">
                        <div #displayField [style.color]="model ? undefined : '#898989'"
                             style="position: absolute; bottom: 0; border-bottom: solid 1px #bdbdbd;
-                            padding-right: 2px; text-align: right; width: 150px">{{model ? (model | currency:undefined:'symbol':digitsInfo) : placeholder}}
+                                   padding-right: 2px; text-align: right"
+                            [style.width.px]="width">
+                           {{model ? (model | currency:undefined:'symbol':digitsInfo) : placeholder}}
                        </div>
                        <input pInputText [(ngModel)]="model" placeholder="{{placeholder}}" style="opacity: 0; padding-top: 5px; text-align: right"
-                              (focus)="onInputFocus($event)" (focusout)="onInputFocusOut($event)" 
+                              (focus)="onInputFocus($event)" (focusout)="onInputFocusOut($event)"
                               (keypress)="filterChars($event)" (keyup.enter)="$event.target.blur()">
                    </div>
                `
@@ -49,6 +51,7 @@ export class JiCurrencyInput {
 
     @Input() style: any;
     @Input() class: any;
+    @Input() width: number = 120;
     @Input() digitsInfo: string;  // default is '1.2-2'
     @Input() placeholder: string;
 
