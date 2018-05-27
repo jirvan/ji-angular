@@ -1,6 +1,6 @@
 {
     "name": "ji-angular",
-    "version": "2.0.10",
+    "version": "2.0.11",
     "description": "Library for Angular applications",
     "main": [
         "./ji-angular.module.ts",
