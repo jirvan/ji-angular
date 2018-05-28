@@ -40,7 +40,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                             [style.width.px]="width">
                            {{model ? (model | currency:undefined:'symbol':digitsInfo) : placeholder}}
                        </div>
-                       <input pInputText [(ngModel)]="model" placeholder="{{placeholder}}" style="opacity: 0; padding-top: 5px; text-align: right"
+                       <input pInputText [(ngModel)]="model"[style.width.px]="width" placeholder="{{placeholder}}" style="opacity: 0; padding-top: 5px; text-align: right"
                               (focus)="onInputFocus($event)" (focusout)="onInputFocusOut($event)"
                               (keypress)="filterChars($event)" (keyup.enter)="$event.target.blur()">
                    </div>
