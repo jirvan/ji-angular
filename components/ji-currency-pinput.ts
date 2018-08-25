@@ -55,8 +55,19 @@ export class JiCurrencyPinput {
     @Input() style: any;
     @Input() class: any;
     @Input() width: number = 120;
-    @Input() digitsInfo: string;  // default is '1.2-2'
     @Input() label: string;
+
+    _digitsInfo: string;
+    allowDecimals: boolean;
+
+    @Input() get digitsInfo(): string {
+        return this._digitsInfo;
+    }
+
+    set digitsInfo(val: string) { // default is '1.2-2'
+        this._digitsInfo = val;
+        this.allowDecimals = !(this._digitsInfo && this._digitsInfo.endsWith('-0'));
+    }
 
     modelValue: string;
 
@@ -87,6 +98,7 @@ export class JiCurrencyPinput {
 
     filterChars(event) {
         var c = event.charCode;  //         k = event.keyCode;  (Both can be used)
-        return ((48 <= c && c <= 57) || c === 45 || c === 46);
+        return ((48 <= c && c <= 57) || c === 45 || (c === 46 && this.allowDecimals));
     }
+
 }
