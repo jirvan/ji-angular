@@ -41,7 +41,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                            {{model ? (model | currency:undefined:'symbol':digitsInfo) : ''}}
                        </div>
                             <span class="md-inputfield">
-                                <input pInputText [(ngModel)]="model"[style.width.px]="width" style="opacity: 0; padding-top: 5px; text-align: right"
+                                <input pInputText [(ngModel)]="model"[style.width.px]="width" style="opacity: 0; padding-top: 2px; text-align: right"
                                   (focus)="onInputFocus($event)" (focusout)="onInputFocusOut($event)"
                                   (keypress)="filterChars($event)" (keyup.enter)="$event.target.blur()">
                                  <label>{{label}}</label>
