@@ -32,10 +32,19 @@ export namespace Ji {
 
     export function toDateString(date: Date): string {
         return date
-            ? (date.getFullYear()
-               + "-" + ("0" + (date.getMonth() + 1)).slice(-2)
-               + "-" + ("0" + date.getDate()).slice(-2))
-            : null;
+               ? (date.getFullYear()
+                  + "-" + ("0" + (date.getMonth() + 1)).slice(-2)
+                  + "-" + ("0" + date.getDate()).slice(-2))
+               : null;
+    }
+
+    export function coalesce(...values: any[]) {
+        for (const value of values) {
+            if (value != undefined && value != null) {
+                return value;
+            }
+        }
+        return undefined;
     }
 
 }
