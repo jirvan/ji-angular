@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2018 Jirvan Pty Ltd
+ Copyright (c) 2019 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
@@ -33,7 +33,7 @@ import {Component, Input} from '@angular/core';
 @Component({
                selector: 'ji-progress-overlay',
                template: `
-                   <blockable-div #blockableDiv [ngStyle]="style" [ngClass]="class"> 
+                   <blockable-div #blockableDiv [style]="style" [ngClass]="class"> 
                        <p-blockUI [target]="blockableDiv" [blocked]="display">
                            <p-progressSpinner [style]="{width: '50px', height: '50px', position: 'absolute', top:0, bottom: 0, left: 0, right: 0, margin: 'auto'}" strokeWidth="4"></p-progressSpinner>
                        </p-blockUI>
