@@ -47,8 +47,8 @@ import {SelectItem} from "primeng/api";
                          '        </p-dropdown>\n' +
                          '        <label *ngIf="cModel" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
                          '    </span>\n' +
-                         '    <input #fileUploadInput style="visibility: hidden" type="file" (change)="fileUploadInput_onChange($event)">\n\n' +
-                         '</div>'
+                         '</div>\n' +
+                         '<input #fileUploadInput style="visibility: hidden; height: 0; display: none" type="file" (change)="fileUploadInput_onChange($event)">'
            })
 export class JiImageInputfield {
 
