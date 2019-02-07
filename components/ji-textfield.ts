@@ -31,23 +31,22 @@
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-               selector: 'ji-color-picker-inputfield',
+               selector: 'ji-textfield',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
                          '    <span class="md-inputfield">\n' +
-                         '        <input pInputText [style.width.px]="80" [(ngModel)]="cModel">\n' +
-                         '        <p-colorPicker [styleClass]="isWhite(cModel) ? \'white\' : \'\'" appendTo="body"\n' +
-                         '                       [(ngModel)]="cModel"></p-colorPicker>\n' +
+                         '        <input pInputText [ngStyle]="inputStyle" [(ngModel)]="cModel">\n' +
                          '        <label>{{label}}</label>\n' +
                          '    </span>\n' +
                          '</div>'
            })
-export class JiColorPickerInputfield {
+export class JiTextfield {
 
     @Input() label: string = 'Color';
     @Input() cStyle: any;
     @Input() cClass: string;
+    @Input() inputStyle: any = {width: '150px'};
 
     private _cModel: string;
 
@@ -61,10 +60,6 @@ export class JiColorPickerInputfield {
     set cModel(val) {
         this._cModel = val;
         this.cModelChange.emit(this._cModel);
-    }
-
-    isWhite(color: string): boolean {
-        return !!color && color.toLowerCase() === '#ffffff';
     }
 
 }

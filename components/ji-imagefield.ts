@@ -33,7 +33,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {SelectItem} from "primeng/api";
 
 @Component({
-               selector: 'ji-image-inputfield',
+               selector: 'ji-imagefield',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
@@ -50,7 +50,7 @@ import {SelectItem} from "primeng/api";
                          '</div>\n' +
                          '<input #fileUploadInput style="visibility: hidden; height: 0; display: none" type="file" (change)="fileUploadInput_onChange($event)">'
            })
-export class JiImageInputfield {
+export class JiImagefield {
 
     @Output() imageUploaded: EventEmitter<string> = new EventEmitter();
 
@@ -85,11 +85,6 @@ export class JiImageInputfield {
     constructor(private http: HttpClient,
                 public errorHandler: ErrorHandler) {
     }
-
-    isWhite(color: string): boolean {
-        return !!color && color.toLowerCase() === '#ffffff';
-    }
-
 
     onImageChange(event) {
         if (this.cModel === 'UploadImage') {
