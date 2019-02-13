@@ -50,7 +50,7 @@ import {SelectItem} from "primeng/api";
                          '</div>\n' +
                          '<input #fileUploadInput style="visibility: hidden; height: 0; display: none" type="file" (change)="fileUploadInput_onChange($event)">'
            })
-export class JiImagefield {
+export class JiImagefieldm {
 
     @Output() imageUploaded: EventEmitter<string> = new EventEmitter();
 

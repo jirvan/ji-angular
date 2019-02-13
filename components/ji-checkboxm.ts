@@ -31,31 +31,27 @@
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-               selector: 'ji-textfield',
-               template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
+               selector: 'ji-checkboxm',
+               template: '<div style="margin-top: 13px; padding-left: 0; padding-right: 0; padding-bottom: 5px;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
-                         '    <span class="md-inputfield">\n' +
-                         '        <input pInputText [ngStyle]="inputStyle" [(ngModel)]="cModel">\n' +
-                         '        <label>{{label}}</label>\n' +
-                         '    </span>\n' +
+                         '        <p-checkbox [label]="label" [(ngModel)]="cModel" binary="true"></p-checkbox>\n' +
                          '</div>'
            })
-export class JiTextfield {
+export class JiCheckboxm {
 
-    @Input() label: string = 'Color';
+    @Input() label: string;
     @Input() cStyle: any;
     @Input() cClass: string;
-    @Input() inputStyle: any = {width: '150px'};
 
-    private _cModel: string;
+    private _cModel: number;
 
     @Input()
     get cModel() {
         return this._cModel;
     }
 
-    @Output() cModelChange = new EventEmitter<string>();
+    @Output() cModelChange = new EventEmitter<number>();
 
     set cModel(val) {
         this._cModel = val;

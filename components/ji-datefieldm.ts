@@ -29,36 +29,50 @@
  */
 
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
+import {Ji} from "../utils/ji";
 
 @Component({
-               selector: 'ji-integerfield',
+               selector: 'ji-datefield',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
                          '    <span class="md-inputfield">\n' +
-                         '        <input pInputText integer style="width: 80px; text-align: right" [ngStyle]="inputStyle" [(ngModel)]="cModel">\n' +
+                         '        <p-calendar [dateFormat]="dateFormat" [inputStyle]="inputStyle" [(ngModel)]="dateModel"></p-calendar>\n' +
                          '        <label>{{label}}</label>\n' +
                          '    </span>\n' +
                          '</div>'
            })
-export class JiIntegerfield {
+export class JiDatefieldm {
 
-    @Input() label: string = 'Color';
+    @Input() label: string = 'Date';
     @Input() cStyle: any;
     @Input() cClass: string;
-    @Input() inputStyle: any;
+    @Input() inputStyle: any = {width: '90px'};
+    @Input() dateFormat: string = 'dd-M-yy';
 
-    private _cModel: number;
+    private _cModel?: string;
+    _dateModel?: Date;
 
     @Input()
     get cModel() {
         return this._cModel;
     }
 
-    @Output() cModelChange = new EventEmitter<number>();
+    @Output() cModelChange = new EventEmitter<string>();
 
     set cModel(val) {
         this._cModel = val;
+        this._dateModel = this._cModel ? new Date(this._cModel) : undefined;
+        this.cModelChange.emit(this._cModel);
+    }
+
+    get dateModel(): Date | undefined {
+        return this._dateModel;
+    }
+
+    set dateModel(val: Date | undefined) {
+        this._dateModel = val;
+        this._cModel = Ji.toDateString(val);
         this.cModelChange.emit(this._cModel);
     }
 

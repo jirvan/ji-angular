@@ -31,31 +31,40 @@
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-               selector: 'ji-checkbox',
-               template: '<div style="margin-top: 13px; padding-left: 0; padding-right: 0; padding-bottom: 5px;"\n' +
+               selector: 'ji-colorpicker',
+               template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
-                         '        <p-checkbox [label]="label" [(ngModel)]="cModel" binary="true"></p-checkbox>\n' +
+                         '    <span class="md-inputfield">\n' +
+                         '        <input pInputText [style.width.px]="80" [(ngModel)]="cModel">\n' +
+                         '        <p-colorPicker [styleClass]="isWhite(cModel) ? \'white\' : \'\'" appendTo="body"\n' +
+                         '                       [(ngModel)]="cModel"></p-colorPicker>\n' +
+                         '        <label>{{label}}</label>\n' +
+                         '    </span>\n' +
                          '</div>'
            })
-export class JiCheckbox {
+export class JiColorpickerm {
 
-    @Input() label: string;
+    @Input() label: string = 'Color';
     @Input() cStyle: any;
     @Input() cClass: string;
 
-    private _cModel: number;
+    private _cModel: string;
 
     @Input()
     get cModel() {
         return this._cModel;
     }
 
-    @Output() cModelChange = new EventEmitter<number>();
+    @Output() cModelChange = new EventEmitter<string>();
 
     set cModel(val) {
         this._cModel = val;
         this.cModelChange.emit(this._cModel);
+    }
+
+    isWhite(color: string): boolean {
+        return !!color && color.toLowerCase() === '#ffffff';
     }
 
 }
