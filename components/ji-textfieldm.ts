@@ -31,7 +31,7 @@
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-               selector: 'formControlNameji-textfieldm',
+               selector: 'ji-textfieldm',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
