@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2018 Jirvan Pty Ltd
+ Copyright (c) 2019 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
@@ -28,45 +28,31 @@
 
  */
 
-export namespace Ji {
+import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 
-    export function toDateString(date?: Date | string): string | undefined | null {
-        if (date === undefined) {
-            return undefined;
-        } else if (date === null) {
-            return null;
-        } else {
-            let dateValue: Date = typeof date === 'string' ? new Date(date) : date;
-            return dateValue.getFullYear()
-                   + "-" + ("0" + (dateValue.getMonth() + 1)).slice(-2)
-                   + "-" + ("0" + dateValue.getDate()).slice(-2);
-        }
-    }
+@Component({
+               selector: 'ji-datefield',
+               template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
+                         '     [formGroup]="form"\n' +
+                         '     [ngStyle]="cStyle"\n' +
+                         '     [ngClass]="cClass">\n' +
+                         '    <span class="md-inputfield">\n' +
+                         '        <p-calendar *ngIf="width"  [dateFormat]="dateFormat" [style.width]="width"     [formControlName]="control"></p-calendar>\n' +
+                         '        <p-calendar *ngIf="!width" [dateFormat]="dateFormat" [inputStyle]="inputStyle" [formControlName]="control"></p-calendar>\n' +
+                         '        <label>{{label}}</label>\n' +
+                         '    </span>\n' +
+                         '</div>'
+           })
+export class JiDatefield {
 
-    export function toDate(dateString?: string): Date | undefined {
-        if (!dateString) {
-            return undefined;
-        } else {
-            var myRegexp = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
-            let match: string[] | null = myRegexp.exec(dateString);
-            if (match && match.length === 4) {
-                let year: number = +match[1];
-                let month: number = +match[2];
-                let day: number = +match[3];
-                return new Date(year, month - 1, day);
-            } else {
-                throw new Error('Invalid date string: "' + dateString + '" (must have format "YYYY-MM-DD")');
-            }
-        }
-    }
-
-    export function coalesce(...values: any[]) {
-        for (const value of values) {
-            if (value != undefined && value != null) {
-                return value;
-            }
-        }
-        return undefined;
-    }
+    @Input() label: string = 'Date';
+    @Input() cStyle: any;
+    @Input() cClass: string;
+    @Input() width: string;
+    @Input() inputStyle: any = {width: '90px'};
+    @Input() dateFormat: string = 'dd-M-yy';
+    @Input() form: FormGroup;
+    @Input() control: string;
 
 }

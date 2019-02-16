@@ -29,51 +29,41 @@
  */
 
 import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
-import {Ji} from "../utils/ji";
+import {FormGroup} from '@angular/forms';
 
 @Component({
-               selector: 'ji-datefieldm',
-               template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
+               selector: 'ji-colorpicker',
+               template: '<div style="margin-top: 30px; margin-right: 20px; padding-left: 0; padding-right: 0"\n' +
+                         '     [formGroup]="form"\n' +
+                         '     [style.width]="width"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass">\n' +
-                         '    <span class="md-inputfield">\n' +
-                         '        <p-calendar [dateFormat]="dateFormat" [inputStyle]="inputStyle" [(ngModel)]="dateModel"></p-calendar>\n' +
-                         '        <label>{{label}}</label>\n' +
-                         '    </span>\n' +
-                         '</div>'
+                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '       <span class="md-inputfield">\n' +
+                         '           <input pInputText style="width: 100%" [ngStyle]="inputStyle" [formControlName]="control">\n' +
+                         '           <label>{{label}}</label>\n' +
+                         '       </span>\n' +
+                         '        <div style="position: absolute; right: 0; bottom: 0; height: 100%; width: 20px;\n' +
+                         '             border: #ffffff solid 1px;\n' +
+                         '             display: inline" \n' +
+                         '             [ngStyle]="{\'background-color\': form.value[control], \'border-color\': (isWhite(form.value[control]) ? \'#bcbcbc\' : form.value[control])}">&nbsp;\n' +
+                         '        </div>\n' +
+                         '    </div>\n' +
+                         '</div>',
+               styles: ['div.normargin {margin-right: 0!important;}']
            })
-export class JiDatefieldm {
+export class JiColorpicker {
 
-    @Input() label: string = 'Date';
+    @Input() label: string = 'Color';
     @Input() cStyle: any;
     @Input() cClass: string;
-    @Input() inputStyle: any = {width: '90px'};
-    @Input() dateFormat: string = 'dd-M-yy';
+    @Input() width: string = '140px';
+    @Input() inputStyle: any;
+    @Input() form: FormGroup;
+    @Input() control: string;
 
-    private _cModel?: string;
-    _dateModel?: Date;
-
-    @Input()
-    get cModel() {
-        return this._cModel;
-    }
-
-    @Output() cModelChange = new EventEmitter<string>();
-
-    set cModel(val) {
-        this._cModel = val;
-        this._dateModel = this._cModel ? new Date(this._cModel) : undefined;
-        this.cModelChange.emit(this._cModel);
-    }
-
-    get dateModel(): Date | undefined {
-        return this._dateModel;
-    }
-
-    set dateModel(val: Date | undefined) {
-        this._dateModel = val;
-        this._cModel = Ji.toDateString(val);
-        this.cModelChange.emit(this._cModel);
+    isWhite(color: string): boolean {
+        return !!color && color.toLowerCase() === '#ffffff';
     }
 
 }
