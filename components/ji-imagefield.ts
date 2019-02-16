@@ -42,16 +42,9 @@ import {FormGroup} from '@angular/forms';
                          '    <span style="position: relative">\n' +
                          '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
-                         '            <ng-template let-item pTemplate="item">\n' +
-                         '                <div [ngStyle]="item.label === \'Upload image...\' ? {\'border-top\': \'solid 1px #C6C6C6\', \'padding-top\': \'8px\'} : {}">{{item.label}}</div>\n' +
-                         '            </ng-template>\n' +
                          '        </p-dropdown>\n' +
                          '        <p-dropdown *ngIf="!width" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
-                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body"\n' +
-                         '                    (onChange)="onImageChange($event)">\n' +
-                         '            <ng-template let-item pTemplate="item">\n' +
-                         '                <div [ngStyle]="item.label === \'Upload image...\' ? {\'border-top\': \'solid 1px #C6C6C6\', \'padding-top\': \'8px\'} : {}">{{item.label}}</div>\n' +
-                         '            </ng-template>\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
                          '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
                          '    </span>\n' +
