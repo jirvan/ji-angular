@@ -40,8 +40,10 @@ import {FormGroup} from '@angular/forms';
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <div style="position: relative; padding-right: 20px">\n' +
                          '        <span class="md-inputfield">\n' +
-                         '            <input *ngIf="width"  [readonly]="readonly" pInputText                        [style.width]="width" [formControlName]="control">\n' +
-                         '            <input *ngIf="!width" [readonly]="readonly" pInputText [ngStyle]="inputStyle"                       [formControlName]="control">\n' +
+                         '            <input *ngIf="width"  pInputText [readonly]="readonly" [formControlName]="control"\n' +
+                         '                   style="width: 100%" [style.width]="width">\n' +
+                         '            <input *ngIf="!width" pInputText [readonly]="readonly" [formControlName]="control"\n' +
+                         '                   style="width: 100%" [ngStyle]="inputStyle">\n' +
                          '            <label>{{label}}</label>\n' +
                          '        </span>\n' +
                          '    </div>\n' +
@@ -57,7 +59,7 @@ export class JiTextfield {
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() width: string;
-    @Input() inputStyle: any = {width: '100%'};
+    @Input() inputStyle: any;
     @Input() form: FormGroup;
     @Input() control: string;
 

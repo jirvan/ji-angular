@@ -32,7 +32,7 @@ import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/cor
 import {FormGroup} from '@angular/forms';
 
 @Component({
-               selector: 'ji-datefield',
+               selector: 'ji-charfilteredfield',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
@@ -40,27 +40,28 @@ import {FormGroup} from '@angular/forms';
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <div style="position: relative; padding-right: 20px">\n' +
                          '        <span class="md-inputfield">\n' +
-                         '            <p-calendar *ngIf="width"  [formControlName]="control" [dateFormat]="dateFormat"\n' +
-                         '                       [style.width]="width"></p-calendar>\n' +
-                         '            <p-calendar *ngIf="!width" [formControlName]="control" [dateFormat]="dateFormat"\n' +
-                         '                       [inputStyle]="inputStyle"></p-calendar>\n' +
+                         '            <input *ngIf="width"  pInputText [readonly]="readonly" [formControlName]="control" [charFilter]="charFilter"\n' +
+                         '                   style="width: 100%" [style.width]="width">\n' +
+                         '            <input *ngIf="!width" pInputText [readonly]="readonly" [formControlName]="control" [charFilter]="charFilter"\n' +
+                         '                   style="width: 100%" [ngStyle]="inputStyle">\n' +
                          '            <label>{{label}}</label>\n' +
                          '        </span>\n' +
                          '    </div>\n' +
                          '</div>',
                styles: ['div.normargin {margin-right: 0!important;}']
            })
-export class JiDatefield {
+export class JiCharfilteredfield {
 
-    @Input() label: string = 'Date';
+    @Input() readonly: boolean;
+    @Input() label: string = 'Color';
     @Input() cTooltip: string;
     @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() width: string;
-    @Input() inputStyle: any = {width: '100%'};
-    @Input() dateFormat: string = 'dd-M-yy';
+    @Input() inputStyle: any;
     @Input() form: FormGroup;
     @Input() control: string;
+    @Input() charFilter: string;
 
 }

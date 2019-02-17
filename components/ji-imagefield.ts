@@ -41,10 +41,10 @@ import {FormGroup} from '@angular/forms';
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <span style="position: relative">\n' +
-                         '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [readonly]="readonly" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
-                         '        <p-dropdown *ngIf="!width" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '        <p-dropdown *ngIf="!width" [placeholder]="label" [options]="options" [readonly]="readonly" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
                          '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
@@ -58,6 +58,7 @@ export class JiImagefield {
 
     @Output() imageUploaded: EventEmitter<string> = new EventEmitter();
 
+    @Input() readonly: boolean;
     @Input() label: string = 'Image';
     @Input() cTooltip: string;
     @Input() cTooltipPosition: string;

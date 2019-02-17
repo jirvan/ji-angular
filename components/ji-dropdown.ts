@@ -40,7 +40,7 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <span style="position: relative">\n' +
+                         '    <div style="position: relative; padding-right: 20px">\n' +
                          '        <p-dropdown *ngIf="width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
@@ -48,8 +48,9 @@ import {FormGroup} from '@angular/forms';
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
                          '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
-                         '    </span>\n' +
-                         '</div>'
+                         '    </div>\n' +
+                         '</div>',
+               styles: ['div.normargin {margin-right: 0!important;}']
            })
 export class JiDropdown {
 
