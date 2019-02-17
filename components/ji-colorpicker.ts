@@ -37,10 +37,11 @@ import {FormGroup} from '@angular/forms';
                          '     [formGroup]="form"\n' +
                          '     [style.width]="width"\n' +
                          '     [ngStyle]="cStyle"\n' +
-                         '     [ngClass]="cClass">\n' +
+                         '     [ngClass]="cClass"\n' +
+                         '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <div style="position: relative; padding-right: 20px">\n' +
                          '       <span class="md-inputfield">\n' +
-                         '           <input pInputText style="width: 100%" [ngStyle]="inputStyle" [formControlName]="control">\n' +
+                         '           <input pInputText [readonly]="readonly" style="width: 100%" [ngStyle]="inputStyle" [formControlName]="control">\n' +
                          '           <label>{{label}}</label>\n' +
                          '       </span>\n' +
                          '        <div style="position: absolute; right: 0; bottom: 0; height: 100%; width: 20px;\n' +
@@ -54,7 +55,10 @@ import {FormGroup} from '@angular/forms';
            })
 export class JiColorpicker {
 
+    @Input() readonly: boolean;
     @Input() label: string = 'Color';
+    @Input() cTooltip: string;
+    @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() width: string = '140px';

@@ -38,7 +38,8 @@ import {FormGroup} from '@angular/forms';
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
-                         '     [ngClass]="cClass">\n' +
+                         '     [ngClass]="cClass"\n' +
+                         '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <span style="position: relative">\n' +
                          '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
@@ -58,6 +59,8 @@ export class JiImagefield {
     @Output() imageUploaded: EventEmitter<string> = new EventEmitter();
 
     @Input() label: string = 'Image';
+    @Input() cTooltip: string;
+    @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() options: SelectItem[];

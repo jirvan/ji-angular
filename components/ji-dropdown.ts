@@ -28,33 +28,40 @@
 
  */
 
-import {Component, ErrorHandler, EventEmitter, Input, Output} from '@angular/core';
+import {Component, ElementRef, ErrorHandler, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {SelectItem} from "primeng/api";
 import {FormGroup} from '@angular/forms';
 
 @Component({
-               selector: 'ji-integerfield',
+               selector: 'ji-dropdown',
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <span class="md-inputfield">\n' +
-                         '        <input *ngIf="width"  [readonly]="readonly" pInputText integer style="text-align:              right" [style.width]="width"  [formControlName]="control">\n' +
-                         '        <input *ngIf="!width" [readonly]="readonly" pInputText integer style="width: 80px; text-align: right" [ngStyle]="inputStyle" [formControlName]="control">\n' +
-                         '        <label>{{label}}</label>\n' +
+                         '    <span style="position: relative">\n' +
+                         '        <p-dropdown *ngIf="width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <p-dropdown *ngIf="!width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
                          '    </span>\n' +
                          '</div>'
            })
-export class JiIntegerfield {
+export class JiDropdown {
 
     @Input() readonly: boolean;
-    @Input() label: string = 'Color';
+    @Input() label: string;
     @Input() cTooltip: string;
     @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
+    @Input() options: SelectItem[];
+    @Input() dropdownStyle: any = {width: '100%'};
     @Input() width: string;
-    @Input() inputStyle: any;
     @Input() form: FormGroup;
     @Input() control: string;
 

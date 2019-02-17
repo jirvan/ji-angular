@@ -36,21 +36,28 @@ import {FormGroup} from '@angular/forms';
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
-                         '     [ngClass]="cClass">\n' +
-                         '    <span class="md-inputfield">\n' +
-                         '        <input *ngIf="width"  pInputText                        [style.width]="width" [formControlName]="control">\n' +
-                         '        <input *ngIf="!width" pInputText [ngStyle]="inputStyle"                       [formControlName]="control">\n' +
-                         '        <label>{{label}}</label>\n' +
-                         '    </span>\n' +
-                         '</div>'
+                         '     [ngClass]="cClass"\n' +
+                         '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
+                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '        <span class="md-inputfield">\n' +
+                         '            <input *ngIf="width"  [readonly]="readonly" pInputText                        [style.width]="width" [formControlName]="control">\n' +
+                         '            <input *ngIf="!width" [readonly]="readonly" pInputText [ngStyle]="inputStyle"                       [formControlName]="control">\n' +
+                         '            <label>{{label}}</label>\n' +
+                         '        </span>\n' +
+                         '    </div>\n' +
+                         '</div>',
+               styles: ['div.normargin {margin-right: 0!important;}']
            })
 export class JiTextfield {
 
+    @Input() readonly: boolean;
     @Input() label: string = 'Color';
+    @Input() cTooltip: string;
+    @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() width: string;
-    @Input() inputStyle: any = {width: '150px'};
+    @Input() inputStyle: any = {width: '100%'};
     @Input() form: FormGroup;
     @Input() control: string;
 

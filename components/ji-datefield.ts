@@ -36,7 +36,8 @@ import {FormGroup} from '@angular/forms';
                template: '<div style="margin-top: 30px; padding-left: 0; padding-right: 0;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
-                         '     [ngClass]="cClass">\n' +
+                         '     [ngClass]="cClass"\n' +
+                         '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
                          '    <span class="md-inputfield">\n' +
                          '        <p-calendar *ngIf="width"  [dateFormat]="dateFormat" [style.width]="width"     [formControlName]="control"></p-calendar>\n' +
                          '        <p-calendar *ngIf="!width" [dateFormat]="dateFormat" [inputStyle]="inputStyle" [formControlName]="control"></p-calendar>\n' +
@@ -47,6 +48,8 @@ import {FormGroup} from '@angular/forms';
 export class JiDatefield {
 
     @Input() label: string = 'Date';
+    @Input() cTooltip: string;
+    @Input() cTooltipPosition: string;
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() width: string;
