@@ -33,7 +33,14 @@ import {FormGroup} from '@angular/forms';
 
 @Component({
                selector: 'ji-checkbox',
-               template: '<div style="margin-top: 13px; padding-left: 0; padding-right: 0; padding-bottom: 5px;"\n' +
+               template: '<div *ngIf="group" [formGroupName]="group" style="margin-top: 13px; padding-left: 0; padding-right: 0; padding-bottom: 5px;"\n' +
+                         '     [formGroup]="form"\n' +
+                         '     [ngStyle]="cStyle"\n' +
+                         '     [ngClass]="cClass"\n' +
+                         '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
+                         '        <p-checkbox [label]="label" [formControlName]="control" binary="true"></p-checkbox>\n' +
+                         '</div>\n' +
+                         '<div *ngIf="!group" style="margin-top: 13px; padding-left: 0; padding-right: 0; padding-bottom: 5px;"\n' +
                          '     [formGroup]="form"\n' +
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
@@ -49,6 +56,7 @@ export class JiCheckbox {
     @Input() cStyle: any;
     @Input() cClass: string;
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
 
 }

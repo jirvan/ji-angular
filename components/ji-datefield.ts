@@ -38,7 +38,16 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '    <div *ngIf="group" [formGroupName]="group" style="position: relative; padding-right: 20px">\n' +
+                         '        <span class="md-inputfield">\n' +
+                         '            <p-calendar *ngIf="width"  [formControlName]="control" [dateFormat]="dateFormat"\n' +
+                         '                       [style.width]="width"></p-calendar>\n' +
+                         '            <p-calendar *ngIf="!width" [formControlName]="control" [dateFormat]="dateFormat"\n' +
+                         '                       [inputStyle]="inputStyle"></p-calendar>\n' +
+                         '            <label>{{label}}</label>\n' +
+                         '        </span>\n' +
+                         '    </div>\n' +
+                         '    <div *ngIf="!group" style="position: relative; padding-right: 20px">\n' +
                          '        <span class="md-inputfield">\n' +
                          '            <p-calendar *ngIf="width"  [formControlName]="control" [dateFormat]="dateFormat"\n' +
                          '                       [style.width]="width"></p-calendar>\n' +
@@ -61,6 +70,7 @@ export class JiDatefield {
     @Input() inputStyle: any = {width: '100%'};
     @Input() dateFormat: string = 'dd-M-yy';
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
 
 }

@@ -40,7 +40,16 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '    <div *ngIf="group" [formGroupName]="group" style="position: relative; padding-right: 20px">\n' +
+                         '        <p-dropdown *ngIf="width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <p-dropdown *ngIf="!width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
+                         '    </div>\n' +
+                         '    <div *ngIf="!group" style="position: relative; padding-right: 20px">\n' +
                          '        <p-dropdown *ngIf="width" [readonly]="readonly" [placeholder]="label" [options]="options" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
@@ -64,6 +73,7 @@ export class JiDropdown {
     @Input() dropdownStyle: any = {width: '100%'};
     @Input() width: string;
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
 
 }

@@ -40,7 +40,16 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <span style="position: relative">\n' +
+                         '    <span *ngIf="group" [formGroupName]="group" style="position: relative">\n' +
+                         '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [readonly]="readonly" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <p-dropdown *ngIf="!width" [placeholder]="label" [options]="options" [readonly]="readonly" [formControlName]="control"\n' +
+                         '                    [autoDisplayFirst]="false" [autoWidth]="false" [style]="dropdownStyle" appendTo="body">\n' +
+                         '        </p-dropdown>\n' +
+                         '        <label *ngIf="form.value[control]" style="position: absolute; top: -21px; left: 5px; font-size: 12px; color: #2f4050;">{{label}}</label>\n' +
+                         '    </span>\n' +
+                         '    <span *ngIf="!group" style="position: relative">\n' +
                          '        <p-dropdown *ngIf="width" [placeholder]="label" [options]="options" [readonly]="readonly" [formControlName]="control"\n' +
                          '                    [autoDisplayFirst]="false" [autoWidth]="false" [style.width]="width" appendTo="body">\n' +
                          '        </p-dropdown>\n' +
@@ -68,6 +77,7 @@ export class JiImagefield {
     @Input() dropdownStyle: any = {width: '320px'};
     @Input() width: string;
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
     @Input() uploadToUrl: string;
 

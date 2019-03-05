@@ -39,7 +39,18 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '    <div *ngIf="group" [formGroupName]="group" style="position: relative; padding-right: 20px">\n' +
+                         '       <span class="md-inputfield">\n' +
+                         '           <input pInputText [readonly]="readonly" style="width: 100%" [ngStyle]="inputStyle" [formControlName]="control">\n' +
+                         '           <label>{{label}}</label>\n' +
+                         '       </span>\n' +
+                         '        <div style="position: absolute; right: 0; bottom: 0; height: 100%; width: 20px;\n' +
+                         '             border: #ffffff solid 1px;\n' +
+                         '             display: inline" \n' +
+                         '             [ngStyle]="{\'background-color\': form.value[control], \'border-color\': (isWhite(form.value[control]) ? \'#bcbcbc\' : form.value[control])}">&nbsp;\n' +
+                         '        </div>\n' +
+                         '    </div>\n' +
+                         '    <div *ngIf="!group" style="position: relative; padding-right: 20px">\n' +
                          '       <span class="md-inputfield">\n' +
                          '           <input pInputText [readonly]="readonly" style="width: 100%" [ngStyle]="inputStyle" [formControlName]="control">\n' +
                          '           <label>{{label}}</label>\n' +
@@ -64,6 +75,7 @@ export class JiColorpicker {
     @Input() width: string = '140px';
     @Input() inputStyle: any;
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
 
     isWhite(color: string): boolean {

@@ -38,7 +38,16 @@ import {FormGroup} from '@angular/forms';
                          '     [ngStyle]="cStyle"\n' +
                          '     [ngClass]="cClass"\n' +
                          '     [pTooltip]="cTooltip" [tooltipPosition]="cTooltipPosition">\n' +
-                         '    <div style="position: relative; padding-right: 20px">\n' +
+                         '    <div *ngIf="group" [formGroupName]="group" style="position: relative; padding-right: 20px">\n' +
+                         '        <span class="md-inputfield">\n' +
+                         '            <input *ngIf="width"  pInputText [readonly]="readonly" [formControlName]="control" integer\n' +
+                         '                   style="width: 100%; text-align: right" [style.width]="width">\n' +
+                         '            <input *ngIf="!width" pInputText [readonly]="readonly" [formControlName]="control" integer\n' +
+                         '                   style="width: 100%; text-align: right" [ngStyle]="inputStyle">\n' +
+                         '            <label>{{label}}</label>\n' +
+                         '        </span>\n' +
+                         '    </div>\n' +
+                         '    <div *ngIf="!group" style="position: relative; padding-right: 20px">\n' +
                          '        <span class="md-inputfield">\n' +
                          '            <input *ngIf="width"  pInputText [readonly]="readonly" [formControlName]="control" integer\n' +
                          '                   style="width: 100%; text-align: right" [style.width]="width">\n' +
@@ -61,6 +70,7 @@ export class JiIntegerfield {
     @Input() width: string;
     @Input() inputStyle: any;
     @Input() form: FormGroup;
+    @Input() group: string;
     @Input() control: string;
 
 }
