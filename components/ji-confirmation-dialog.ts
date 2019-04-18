@@ -57,8 +57,8 @@ export class JiConfirmationDialog {
     title: string;
     message: string;
     messageWidth: string;
-    accept?: () => void;
-    reject?: () => void;
+    accept: () => void;
+    reject: () => void;
 
     display: boolean = false;
 
