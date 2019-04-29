@@ -41,7 +41,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                            {{model ? (model | currency:undefined:'symbol':digitsInfo) : ''}}
                        </div>
                             <span class="md-inputfield">
-                                <input pInputText [(ngModel)]="model"[style.width.px]="width" style="opacity: 0; padding-top: 2px; text-align: right"
+                                <input pInputText [disabled]="disabled" [(ngModel)]="model"[style.width.px]="width" style="opacity: 0; padding-top: 2px; text-align: right"
                                   (focus)="onInputFocus($event)" (focusout)="onInputFocusOut($event)"
                                   (keypress)="filterChars($event)" (keyup.enter)="$event.target.blur()">
                                  <label>{{label}}</label>
@@ -52,6 +52,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
 export class JiCurrencyPinput {
 
 
+    @Input() disabled: boolean = false;
     @Input() style: any;
     @Input() class: any;
     @Input() width: number = 120;
