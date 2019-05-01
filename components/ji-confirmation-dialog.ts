@@ -41,9 +41,7 @@ import {Component} from '@angular/core';
                                    {{title}}
                                </div>
                            </p-header>
-                           <div style="padding-top: 20px; padding-bottom: 20px" [style.width]="messageWidth">
-                               {{message}}
-                           </div>
+                           <div style="padding-bottom: 20px" [style.width]="messageWidth" [innerHTML]="message"></div>
                            <p-footer>
                                <button type="button" pButton icon="fa-check" (click)="display=false;accept()" label="Yes"></button>
                                <button type="button" pButton icon="fa-close" (click)="display=false;reject()" label="No"></button>
