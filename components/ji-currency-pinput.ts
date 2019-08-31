@@ -34,7 +34,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                selector: 'ji-currency-pinput',
                template: `
                    <div style="position: relative" [ngStyle]="style" [ngClass]="class">
-                       <div #displayField [style.color]="model ? undefined : '#898989'"
+                       <div #displayField [style.color]="model ? undefined : '#898989'" [style.opacity]="disabled ? 0.35 : 1.0"
                             style="position: absolute; bottom: 0; border-bottom: solid 1px #bdbdbd;
                                    padding-right: 2px; text-align: right"
                             [style.width.px]="width">
