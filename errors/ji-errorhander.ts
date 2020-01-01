@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2018 Jirvan Pty Ltd
+ Copyright (c) 2018, 2019, 2020 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
