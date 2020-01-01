@@ -57,8 +57,8 @@ export class JiErrorHandler implements ErrorHandler {
             if (errorObject.error) {
                 return {
                     assumeSafeForDialog: true,
-                    title: errorObject.error.errorName || errorObject.name || 'Error',
-                    message: errorObject.error.errorMessage || errorObject.message,
+                    title:   `HTTP ${errorObject.status} ${errorObject.error.error} `,
+                    message: errorObject.error.message ||errorObject.error.errorMessage || errorObject.message,
                     additionalInfo: basicAdditionalInfo + (errorObject.error.errorInfo ? '\n\n' + errorObject.error.errorInfo : '')
                 };
             } else {
