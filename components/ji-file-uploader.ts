@@ -1,6 +1,6 @@
 /*
 
- Copyright (c) 2019 Jirvan Pty Ltd
+ Copyright (c) 2019, 2020 Jirvan Pty Ltd
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or without modification,
@@ -52,9 +52,12 @@ export class JiFileUploader {
 
     private uploadFile_uploadToUrl?: string;
     private thenFunction?: (result: any) => void;
+    private errorFunction?: (error: any) => void;
 
-    uploadFileTo(uploadToUrl: string, accept: string, thenFunction?: (result: any) => void) {
-        if (!uploadToUrl) throw new Error('uploadToUrl must be provided');
+    uploadFileTo(uploadToUrl: string, accept: string, thenFunction?: (result: any) => void, errorFunction?: (error: any) => void) {
+        if (!uploadToUrl) {
+            throw new Error('uploadToUrl must be provided');
+        }
         this.uploadFile_uploadToUrl = uploadToUrl;
         this.thenFunction = thenFunction;
         this.fileUploadInput.nativeElement.accept = accept;
@@ -74,15 +77,19 @@ export class JiFileUploader {
             formData.append('uploadFile', file, file.name);
             this.http.post<any>(uploadToUrl, formData)
                 .subscribe(result => {
-                               this.fileUploadInput.nativeElement.value = "";
+                               this.fileUploadInput.nativeElement.value = '';
                                if (this.thenFunction) {
                                    this.thenFunction(result);
                                }
 
                            },
                            (error: any) => {
-                               this.fileUploadInput.nativeElement.value = "";
-                               this.errorHandler.handleError(error)
+                               this.fileUploadInput.nativeElement.value = '';
+                               if (this.errorFunction) {
+                                   this.errorFunction(error);
+                               } else {
+                                   this.errorHandler.handleError(error);
+                               }
                            });
 
 
