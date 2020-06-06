@@ -60,6 +60,7 @@ export class JiFileUploader {
         }
         this.uploadFile_uploadToUrl = uploadToUrl;
         this.thenFunction = thenFunction;
+        this.errorFunction = errorFunction;
         this.fileUploadInput.nativeElement.accept = accept;
         this.fileUploadInput.nativeElement.click();
     }
