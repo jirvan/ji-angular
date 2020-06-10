@@ -53,12 +53,14 @@ export class JiFileUploader {
     private uploadFile_uploadToUrl?: string;
     private thenFunction?: (result: any) => void;
     private errorFunction?: (error: any) => void;
+    private uploadStartedFunction?: () => void;
 
-    uploadFileTo(uploadToUrl: string, accept: string, thenFunction?: (result: any) => void, errorFunction?: (error: any) => void) {
+    uploadFileTo(uploadToUrl: string, accept: string, thenFunction?: (result: any) => void, errorFunction?: (error: any) => void, uploadStartedFunction?: () => void) {
         if (!uploadToUrl) {
             throw new Error('uploadToUrl must be provided');
         }
         this.uploadFile_uploadToUrl = uploadToUrl;
+        this.uploadStartedFunction = uploadStartedFunction;
         this.thenFunction = thenFunction;
         this.errorFunction = errorFunction;
         this.fileUploadInput.nativeElement.accept = accept;
@@ -76,6 +78,9 @@ export class JiFileUploader {
             let file: File = fileList[0];
             let formData: FormData = new FormData();
             formData.append('uploadFile', file, file.name);
+            if (this.uploadStartedFunction) {
+                this.uploadStartedFunction();
+            }
             this.http.post<any>(uploadToUrl, formData)
                 .subscribe(result => {
                                this.fileUploadInput.nativeElement.value = '';
