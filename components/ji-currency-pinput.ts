@@ -38,7 +38,7 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@an
                             style="position: absolute; bottom: 0; border-bottom: solid 1px #bdbdbd;
                                    padding-right: 2px; text-align: right"
                             [style.width.px]="width">
-                           {{model ? (model | currency:undefined:'symbol':digitsInfo) : ''}}
+                           {{model ? (model | currency:currencyCode:'symbol':digitsInfo) : ''}}
                        </div>
                             <span class="md-inputfield">
                                 <input pInputText [disabled]="disabled" [(ngModel)]="model"[style.width.px]="width" style="opacity: 0; padding-top: 2px; text-align: right"
@@ -57,6 +57,7 @@ export class JiCurrencyPinput {
     @Input() class: any;
     @Input() width: number = 120;
     @Input() label: string;
+    @Input() currencyCode: string = 'USD';
 
     _digitsInfo: string;
     allowDecimals: boolean;
